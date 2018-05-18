@@ -1,27 +1,23 @@
 const gameGrid = [
   [0,0,0,0,0,0,0,0,0,0],
-  [0,1,1,0,1,1,1,1,1,0],
-  [0,1,1,0,1,0,0,0,1,0],
-  [0,1,0,0,1,0,0,0,1,0],
+  [3,1,1,0,1,1,1,1,1,0],
+  [0,1,1,0,1,3,0,0,1,0],
+  [0,1,3,0,1,0,0,0,1,0],
   [0,1,0,0,1,0,0,0,1,0],
   [0,1,0,0,0,0,0,0,1,0],
   [0,1,1,1,1,1,0,1,1,0],
-  [0,1,0,0,0,1,0,1,0,0],
+  [0,1,3,0,0,1,0,1,0,0],
   [0,1,1,1,0,1,0,1,0,0],
   [0,0,0,0,0,0,0,0,0,0]
 ];
 //  0 = floor; 1 = wall; .. 3= treasure
-
-let playerLocation = {};
-let treasureCounter = 0;
-let lifeCounter = 0;
-let turnCounter = 0;
-
-const $treasure = $('.treasureScore');
-$treasure.text(treasureCounter);
-
 $(() => {
 
+  let playerLocation = {};
+  let treasureCounter = 1;
+
+  const $treasure = $('.treasureScore');
+  $treasure.text(treasureCounter);
   $('#map').on('mouseover','div', function() {
     $('#cell-address').val(`${$(this).data('x')}-${$(this).data('y')}`);
   });
@@ -118,6 +114,7 @@ $(() => {
     treasureCounter += 100;
     console.log(treasureCounter);
     $treasure.text(treasureCounter);
+    gameGrid[playerLocation.x][playerLocation.y] = 0;
   }
 
   function setup(){
@@ -126,13 +123,6 @@ $(() => {
     movePlayer();
   }
   setup();
-
-
-
-
-
-
-
 
 
 });
