@@ -1,38 +1,32 @@
 const gameGrid = [
   [0,0,0,0,0,0,0,0,0,0],
-  [0,0,1,0,1,0,0,0,0,0],
   [0,1,1,0,1,1,1,1,1,0],
+  [0,1,1,0,1,0,0,0,1,0],
   [0,1,0,0,1,0,0,0,1,0],
   [0,1,0,0,1,0,0,0,1,0],
   [0,1,0,0,0,0,0,0,1,0],
   [0,1,1,1,1,1,0,1,1,0],
-  [0,0,0,0,0,1,0,1,0,0],
-  [0,0,0,0,0,1,0,1,0,0],
+  [0,1,0,0,0,1,0,1,0,0],
+  [0,1,1,1,0,1,0,1,0,0],
   [0,0,0,0,0,0,0,0,0,0]
 ];
-//  0 = floor; 1 = wall; .. 9= playerCharacter
+//  0 = floor; 1 = wall; .. 3= treasure
 
-const $playerCharacter = $('#playerCharacter');
 let playerLocation = {};
-const $map = $('#map');
+let treasureCounter = 0;
+let lifeCounter = 0;
+let turnCounter = 0;
+
+const $treasure = $('.treasureScore');
+$treasure.text(treasureCounter);
 
 $(() => {
-
-  function emptyCheck() {
-    $map.empty();
-  }
-
-  $('.tester').on('click', () => {
-    emptyCheck();
-  });
 
   $('#map').on('mouseover','div', function() {
     $('#cell-address').val(`${$(this).data('x')}-${$(this).data('y')}`);
   });
-  function drawMap(){
-    console.log($map);
-    // $map.empty();
 
+  function drawMap(){
     $.each(gameGrid, (i,row) => {
       $.each(row, (j,cell) => {
         const $element = $('<div />');
@@ -40,6 +34,8 @@ $(() => {
           $element.addClass('floor');
         } else if (cell === 1) {
           $element.addClass('wall');
+        } else if (cell === 3) {
+          $element.addClass('treasure');
         }
         $element.attr('data-x', i);
         $element.attr('data-y', j);
@@ -49,44 +45,57 @@ $(() => {
         $element.appendTo('#map').clone(true);
       });
     });
-
   }
 
   function movePlayer(){
     $(document).on('keypress', function(e){
       switch(e.which){
         case 119:
-          if (gameGrid[playerLocation.x-1][playerLocation.y] === 0){
-            $('.playerCharacter').removeClass('playerCharacter').addClass('floor');
+          if (gameGrid[playerLocation.x-1][playerLocation.y] === 0 ||
+          gameGrid[playerLocation.x-1][playerLocation.y] === 3){
             playerLocation.x -= 1;
-            $(`div[data-x='${playerLocation.x}'][data-y='${playerLocation.y}']`).removeClass('floor').addClass('playerCharacter');
+            moveDirection();
+            if (gameGrid[playerLocation.x][playerLocation.y] === 3){
+              collectTreasure();
+            }
           } else {
             console.log('Cannot move in that direction');
           }
           break;
         case 97:
-          if (gameGrid[playerLocation.x][playerLocation.y-1] === 0){
-            $('.playerCharacter').removeClass('playerCharacter').addClass('floor');
+          if (gameGrid[playerLocation.x][playerLocation.y-1] === 0 ||
+          gameGrid[playerLocation.x][playerLocation.y-1] === 3){
             playerLocation.y -= 1;
-            $(`div[data-x='${playerLocation.x}'][data-y='${playerLocation.y}']`).removeClass('floor').addClass('playerCharacter');
+            moveDirection();
+            if (gameGrid[playerLocation.x][playerLocation.y] === 3){
+              collectTreasure();
+            }
+
           } else {
             console.log('Cannot move in that direction');
           }
           break;
         case 115:
-          if (gameGrid[playerLocation.x+1][playerLocation.y] === 0){
-            $('.playerCharacter').removeClass('playerCharacter').addClass('floor');
+          if (gameGrid[playerLocation.x+1][playerLocation.y] === 0 ||
+          gameGrid[playerLocation.x+1][playerLocation.y] === 3){
             playerLocation.x += 1;
-            $(`div[data-x='${playerLocation.x}'][data-y='${playerLocation.y}']`).removeClass('floor').addClass('playerCharacter');
+            moveDirection();
+            if (gameGrid[playerLocation.x][playerLocation.y] === 3){
+              collectTreasure();
+            }
           } else {
             console.log('Cannot move in that direction');
           }
           break;
         case 100:
-          if (gameGrid[playerLocation.x][playerLocation.y+1] === 0){
-            $('.playerCharacter').removeClass('playerCharacter').addClass('floor');
+          if (gameGrid[playerLocation.x][playerLocation.y+1] === 0 ||
+          gameGrid[playerLocation.x][playerLocation.y+1] === 3){
             playerLocation.y += 1;
-            $(`div[data-x='${playerLocation.x}'][data-y='${playerLocation.y}']`).removeClass('floor').addClass('playerCharacter');
+            moveDirection();
+            if (gameGrid[playerLocation.x][playerLocation.y+1] === 3){
+              console.log('should collect treasure');
+              collectTreasure();
+            }
           } else {
             console.log('Cannot move in that direction');
           }
@@ -95,9 +104,20 @@ $(() => {
     });
   }
 
+  function moveDirection(){
+    $('.playerCharacter').removeClass('playerCharacter').addClass('floor');
+    $(`div[data-x='${playerLocation.x}'][data-y='${playerLocation.y}']`).removeClass('floor treasure').addClass('playerCharacter');
+  }
+
   function spawnPlayer() {
     playerLocation = {x: 0, y: 0};
-    $(`div[data-x='${playerLocation.x}'][data-y='${playerLocation.y}']`).removeClass('floor').addClass('playerCharacter');
+    $(`div[data-x='${playerLocation.x}'][data-y='${playerLocation.y}']`).removeClass('floor treasure').addClass('playerCharacter');
+  }
+
+  function collectTreasure() {
+    treasureCounter += 100;
+    console.log(treasureCounter);
+    $treasure.text(treasureCounter);
   }
 
   function setup(){

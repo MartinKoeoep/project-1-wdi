@@ -22,5 +22,10 @@
 #map div.playerCharacter{
   border-radius: 25px;
   background-color: darkGreen;
-
+  border: 0px;
+}
+#map div.treasure{
+  border-radius: 30px;
+  background-color: gold;
+  border: 0px;
 }
