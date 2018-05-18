@@ -1,0 +1,26 @@
+*{
+  box-sizing: border-box;
+}
+#map div{
+  border: 1px solid purple;
+  width: 50px;
+  height: 50px;
+  float: left;
+}
+#map{
+  width: 500px;
+  height: 500px;
+  background-color: #421C52;
+}
+#map div.floor{
+  background-color: #421C52;
+}
+#map div.wall{
+  background-color: grey;
+}
+
+#map div.playerCharacter{
+  border-radius: 25px;
+  background-color: darkGreen;
+
+}
