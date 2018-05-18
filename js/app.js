@@ -1,6 +1,6 @@
 const gameGrid = [
   [0,0,0,0,0,0,0,0,0,0],
-  [0,0,1,9,1,0,0,0,0,0],
+  [0,0,1,0,1,0,0,0,0,0],
   [0,1,1,0,1,1,1,1,1,0],
   [0,1,0,0,1,0,0,0,1,0],
   [0,1,0,0,1,0,0,0,1,0],
@@ -40,12 +40,6 @@ $(() => {
           $element.addClass('floor');
         } else if (cell === 1) {
           $element.addClass('wall');
-        } else if (cell === 9) {
-          $element.addClass('playerCharacter');
-          playerLocation = {
-            x: i,
-            y: j
-          };
         }
         $element.attr('data-x', i);
         $element.attr('data-y', j);
@@ -100,8 +94,15 @@ $(() => {
       }
     });
   }
+
+  function spawnPlayer() {
+    playerLocation = {x: 0, y: 0};
+    $(`div[data-x='${playerLocation.x}'][data-y='${playerLocation.y}']`).removeClass('floor').addClass('playerCharacter');
+  }
+
   function setup(){
     drawMap();
+    spawnPlayer();
     movePlayer();
   }
   setup();
