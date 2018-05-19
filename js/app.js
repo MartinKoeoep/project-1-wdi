@@ -1,16 +1,16 @@
 const gameGrid = [
   [0,0,0,0,0,0,0,0,0,0],
-  [3,1,1,0,1,1,1,1,1,0],
+  [3,1,1,0,1,1,8,1,1,0],
   [0,1,1,0,1,3,0,0,1,0],
   [0,1,3,0,1,0,0,0,1,0],
   [0,1,0,0,1,0,4,0,1,0],
-  [0,1,0,0,0,0,0,0,1,0],
-  [0,1,1,1,1,1,0,1,1,0],
+  [0,8,0,0,0,0,0,0,1,0],
+  [0,1,1,1,8,1,0,1,1,0],
   [0,1,3,0,0,1,0,1,0,0],
   [0,1,1,1,0,1,0,1,0,0],
   [0,0,0,0,0,0,0,0,0,0]
 ];
-//  0 = floor; 1 = wall; 3= treasure: 4 = guard
+//  0 = floor; 1 = wall; 3= treasure: 4 = guard; 8= window
 $(() => {
 
   let playerLocation = {};
@@ -38,13 +38,12 @@ $(() => {
           $element.addClass('guard');
           guardLocation = {x: i, y: j};
           gameGrid[guardLocation.x][guardLocation.y] = 0;
+        } else if (cell === 8) {
+          $element.addClass('window');
         }
         $element.attr('data-x', i);
         $element.attr('data-y', j);
-        $element.on('click', function(){
-          console.log($(this));
-        });
-        $element.appendTo('#map').clone(true);
+        $element.appendTo('#map');
       });
     });
   }

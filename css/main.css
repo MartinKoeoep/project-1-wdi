@@ -18,6 +18,9 @@
 #map div.wall{
   background-color: grey;
 }
+#map div.window{
+  background-color: #8B4513;
+}
 
 #map div.playerCharacter{
   border-radius: 25px;
