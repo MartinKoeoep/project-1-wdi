@@ -3,20 +3,20 @@ const gameGrid = [
   [3,1,1,0,1,1,1,1,1,0],
   [0,1,1,0,1,3,0,0,1,0],
   [0,1,3,0,1,0,0,0,1,0],
-  [0,1,0,0,1,0,0,0,1,0],
+  [0,1,0,0,1,0,4,0,1,0],
   [0,1,0,0,0,0,0,0,1,0],
   [0,1,1,1,1,1,0,1,1,0],
   [0,1,3,0,0,1,0,1,0,0],
   [0,1,1,1,0,1,0,1,0,0],
   [0,0,0,0,0,0,0,0,0,0]
 ];
-//  0 = floor; 1 = wall; .. 3= treasure
+//  0 = floor; 1 = wall; 3= treasure: 4 = guard
 $(() => {
 
   let playerLocation = {};
-  let treasureCounter = 1;
+  let treasureCounter = 0;
 
-  const $treasure = $('.treasureScore');
+  const $treasure = $('#treasureScore');
   $treasure.text(treasureCounter);
   $('#map').on('mouseover','div', function() {
     $('#cell-address').val(`${$(this).data('x')}-${$(this).data('y')}`);
@@ -32,6 +32,8 @@ $(() => {
           $element.addClass('wall');
         } else if (cell === 3) {
           $element.addClass('treasure');
+        } else if (cell === 3) {
+          $element.addClass('guard');
         }
         $element.attr('data-x', i);
         $element.attr('data-y', j);
