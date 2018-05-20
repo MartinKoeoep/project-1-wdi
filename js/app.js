@@ -154,6 +154,8 @@ $(() => {
     if (guardLocation.x === playerLocation.x && guardLocation.y === playerLocation.y) {
       lifecounter--;
       $livesScore.text(lifecounter);
+      treasureCounter -= 50;
+      $treasure.text(treasureCounter);
       deSpawnPlayer();
       spawnPlayer();
     }
