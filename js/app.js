@@ -8,9 +8,9 @@ const gameGrid = [
   [0,1,1,1,8,1,0,1,1,0],
   [0,1,3,0,0,1,0,1,0,0],
   [0,1,1,1,0,1,0,1,0,0],
-  [0,0,0,0,0,0,0,0,0,0]
+  [0,0,0,0,0,0,0,0,0,9]
 ];
-//  0 = floor; 1 = wall; 3= treasure: 4 = guard; 8= window
+//  0 = floor; 1 = wall; 3= treasure: 4 = guard; 8= window; 9= endpoint;
 $(() => {
 
   let playerLocation = {};
@@ -19,22 +19,25 @@ $(() => {
   let treasureCounter = 0;
   let lifecounter = 3;
   let turnCounter = 0;
+  let endScoreCounter = 0;
 
   const $introScreen = $('.introScreen');
   const $playScreen = $('.playScreen');
+  const $endGameScreen = $('.endGameScreen');
   const $livesScore = $('#livesScore');
   const $treasure = $('#treasureScore');
   const $turnsScore = $('#turnsScore');
   const $newGame = $('#newGame');
+  const $endScore = $('#endScore');
+  const $restart = $('#restart');
 
   $playScreen.hide();
+  $endGameScreen.hide();
   $treasure.text(treasureCounter);
   $livesScore.text(lifecounter);
   $turnsScore.text(turnCounter);
+  $endScore.text(endScoreCounter);
 
-  $('#map').on('mouseover','div', function() {
-    $('#cell-address').val(`${$(this).data('x')}-${$(this).data('y')}`);
-  });
   function drawMap(){
     $.each(gameGrid, (i,row) => {
       $.each(row, (j,cell) => {
@@ -51,6 +54,8 @@ $(() => {
           gameGrid[guardLocation.x][guardLocation.y] = 0;
         } else if (cell === 8) {
           $element.addClass('window');
+        } else if (cell === 9) {
+          $element.addClass('exit');
         }
         $element.attr('data-x', i);
         $element.attr('data-y', j);
@@ -80,6 +85,10 @@ $(() => {
           } else if (gameGrid[playerLocation.x-1][playerLocation.y] === 8){
             playerLocation.x -= 2;
             moveDirection();
+          } else if (gameGrid[playerLocation.x-1][playerLocation.y] === 9){
+            playerLocation.x -= 1;
+            moveDirection();
+            endGame();
           }
           break;
         case 97:     // MOVE PLAYER LEFT
@@ -93,6 +102,10 @@ $(() => {
           } else if (gameGrid[playerLocation.x][playerLocation.y-1] === 8){
             playerLocation.y -= 2;
             moveDirection();
+          } else if (gameGrid[playerLocation.x][playerLocation.y-1] === 9){
+            playerLocation.y -= 1;
+            moveDirection();
+            endGame();
           }
           break;
         case 115:     // MOVE PLAYER DOWN
@@ -106,6 +119,11 @@ $(() => {
           } else if (gameGrid[playerLocation.x+1][playerLocation.y] === 8){
             playerLocation.x += 2;
             moveDirection();
+          } else if (gameGrid[playerLocation.x+1][playerLocation.y] === 9){
+            playerLocation.x += 1;
+            moveDirection();
+            console.log('error');
+            endGame();
           }
           break;
         case 100:     // MOVE PLAYER RIGHT
@@ -119,6 +137,10 @@ $(() => {
           } else if (gameGrid[playerLocation.x][playerLocation.y+1] === 8){
             playerLocation.y += 2;
             moveDirection();
+          } else if (gameGrid[playerLocation.x][playerLocation.y+1] === 9){
+            playerLocation.y += 1;
+            moveDirection();
+            endGame();
           }
           break;
       }
@@ -198,6 +220,17 @@ $(() => {
         }
         break;
     }
+  }
+
+  function endGame() {
+    $playScreen.hide();
+    $endGameScreen.show();
+    endScoreCounter = (treasureCounter * lifecounter) - (turnCounter * 5);
+    console.log(endScoreCounter);
+    $endScore.text(endScoreCounter);
+    $restart.on('click', () => {
+      location.reload();
+    });
   }
 
   function setup(){

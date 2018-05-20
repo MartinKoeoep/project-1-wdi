@@ -37,3 +37,6 @@
   background-color: gold;
   border: 0px;
 }
+#map div.exit{
+  background-color: rgba(0,0,0,0.3);
+}
