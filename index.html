@@ -8,13 +8,28 @@
   <link rel="stylesheet" href="./css/main.css">
 </head>
 <body>
-  <div id="treasureScore">0</div>
-  <div class="livesScore">0</div>
-  <div class="turnsScore">0</div>
-  <div id="map">
-
+  <div class="introScreen">
+    <div class="introLeft">
+      <h1>The Heist</h1>
+      <p>You are Emilia, born on the streets of Raven's Cliff you've learned to fend for yourself and take from the corrupt nobility.</p>
+      <p>To control Emilia, use WASD to move around.</p>
+      <p>Every piece of treasure you gather is worth 100 gold coins.</p>
+      <p>The Guards are corrupt and when they catch you, they'll take a piece of your score.</p>
+      <p>Your fence is willing to buy the loot from you, but he'll pay more the quicker you are.</p>
+    </div>
+    <div class="introRight">
+      <button id="newGame">New Game</button>
+      <button id="highScoreTable">Coming Soon... High Score</button>
+    </div>
   </div>
-  <input type="text" id="cell-address" value="">
-  <button class="tester"></button>
+  <div class="playScreen">
+    <div id="treasureScore">0</div>
+    <div id="livesScore">0</div>
+    <div id="turnsScore">0</div>
+    <div id="map">
+    </div>
+    <input type="text" id="cell-address" value="">
+  </div>
+
 </body>
 </html>

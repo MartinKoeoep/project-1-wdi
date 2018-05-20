@@ -17,13 +17,24 @@ $(() => {
   let guardLocation = {};
   let guardDirection = 0;
   let treasureCounter = 0;
+  let lifecounter = 3;
+  let turnCounter = 0;
 
+  const $introScreen = $('.introScreen');
+  const $playScreen = $('.playScreen');
+  const $livesScore = $('#livesScore');
   const $treasure = $('#treasureScore');
+  const $turnsScore = $('#turnsScore');
+  const $newGame = $('#newGame');
+
+  $playScreen.hide();
   $treasure.text(treasureCounter);
+  $livesScore.text(lifecounter);
+  $turnsScore.text(turnCounter);
+
   $('#map').on('mouseover','div', function() {
     $('#cell-address').val(`${$(this).data('x')}-${$(this).data('y')}`);
   });
-
   function drawMap(){
     $.each(gameGrid, (i,row) => {
       $.each(row, (j,cell) => {
@@ -48,11 +59,17 @@ $(() => {
     });
   }
 
+  function updateTurnCounter() {
+    turnCounter++;
+    $turnsScore.text(turnCounter);
+  }
+
   function movePlayer(){
     $(document).on('keypress', function(e){
+      updateTurnCounter();
       moveGuard();
       switch(e.which){
-        case 119:
+        case 119:     // MOVE PLAYER UP
           if (gameGrid[playerLocation.x-1][playerLocation.y] === 0 ||
           gameGrid[playerLocation.x-1][playerLocation.y] === 3){
             playerLocation.x -= 1;
@@ -60,9 +77,12 @@ $(() => {
             if (gameGrid[playerLocation.x][playerLocation.y] === 3){
               collectTreasure();
             }
+          } else if (gameGrid[playerLocation.x-1][playerLocation.y] === 8){
+            playerLocation.x -= 2;
+            moveDirection();
           }
           break;
-        case 97:
+        case 97:     // MOVE PLAYER LEFT
           if (gameGrid[playerLocation.x][playerLocation.y-1] === 0 ||
           gameGrid[playerLocation.x][playerLocation.y-1] === 3){
             playerLocation.y -= 1;
@@ -70,10 +90,12 @@ $(() => {
             if (gameGrid[playerLocation.x][playerLocation.y] === 3){
               collectTreasure();
             }
-
+          } else if (gameGrid[playerLocation.x][playerLocation.y-1] === 8){
+            playerLocation.y -= 2;
+            moveDirection();
           }
           break;
-        case 115:
+        case 115:     // MOVE PLAYER DOWN
           if (gameGrid[playerLocation.x+1][playerLocation.y] === 0 ||
           gameGrid[playerLocation.x+1][playerLocation.y] === 3){
             playerLocation.x += 1;
@@ -81,17 +103,22 @@ $(() => {
             if (gameGrid[playerLocation.x][playerLocation.y] === 3){
               collectTreasure();
             }
+          } else if (gameGrid[playerLocation.x+1][playerLocation.y] === 8){
+            playerLocation.x += 2;
+            moveDirection();
           }
           break;
-        case 100:
+        case 100:     // MOVE PLAYER RIGHT
           if (gameGrid[playerLocation.x][playerLocation.y+1] === 0 ||
           gameGrid[playerLocation.x][playerLocation.y+1] === 3){
             playerLocation.y += 1;
             moveDirection();
             if (gameGrid[playerLocation.x][playerLocation.y+1] === 3){
-              console.log('should collect treasure');
               collectTreasure();
             }
+          } else if (gameGrid[playerLocation.x][playerLocation.y+1] === 8){
+            playerLocation.y += 2;
+            moveDirection();
           }
           break;
       }
@@ -112,6 +139,9 @@ $(() => {
     playerLocation = {x: 0, y: 0};
     $(`div[data-x='${playerLocation.x}'][data-y='${playerLocation.y}']`).removeClass('floor treasure').addClass('playerCharacter');
   }
+  function deSpawnPlayer() {
+    $('.playerCharacter').removeClass('playerCharacter').addClass('floor');
+  }
 
   function collectTreasure() {
     treasureCounter += 100;
@@ -120,7 +150,17 @@ $(() => {
     gameGrid[playerLocation.x][playerLocation.y] = 0;
   }
 
+  function checkForPlayer() {
+    if (guardLocation.x === playerLocation.x && guardLocation.y === playerLocation.y) {
+      lifecounter--;
+      $livesScore.text(lifecounter);
+      deSpawnPlayer();
+      spawnPlayer();
+    }
+  }
+
   function moveGuard(){
+    checkForPlayer();
     guardDirection = Math.floor(Math.random() * 4);
     switch (guardDirection) {
       case 0:
@@ -163,7 +203,12 @@ $(() => {
     spawnPlayer();
     movePlayer();
   }
-  setup();
+
+  $newGame.on('click', () => {
+    $introScreen.hide();
+    $playScreen.show();
+    setup();
+  });
 
 
 });
