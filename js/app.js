@@ -1,26 +1,16 @@
 const gameGrid = [
-  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-  [3,1,1,0,1,1,8,1,1,0,0,0,0,0,0,0,0,0,0,0],
-  [0,1,1,0,1,3,0,0,1,0,0,0,0,0,0,0,0,0,0,0],
-  [0,1,3,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0],
-  [0,1,0,0,1,0,4,0,1,0,0,0,0,0,0,0,0,0,0,0],
-  [0,8,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0],
-  [0,1,1,1,8,1,0,1,1,0,0,0,0,0,0,0,0,0,0,0],
-  [0,1,3,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0],
-  [0,1,1,1,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0],
-  [0,0,0,0,0,0,0,0,0,9,0,0,0,0,0,0,0,0,0,0],
-  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-  [3,1,1,0,1,1,8,1,1,0,0,0,0,0,0,0,0,0,0,0],
-  [0,1,1,0,1,3,0,0,1,0,0,0,0,0,0,0,0,0,0,0],
-  [0,1,3,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0],
-  [0,1,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0],
-  [0,8,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0],
-  [0,1,1,1,8,1,0,1,1,0,0,0,0,0,0,0,0,0,0,0],
-  [0,1,3,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0],
-  [0,1,1,1,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0],
+  [9,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+  [0,0,1,1,1,1,8,1,1,1,1,1,1,1,1,1,1,1,1,0],
+  [0,1,1,0,1,3,0,0,1,0,0,0,0,0,8,0,0,0,1,0],
+  [0,1,3,0,1,0,0,0,1,0,0,0,0,0,1,0,0,3,8,0],
+  [0,1,0,0,1,0,4,0,1,1,1,1,0,1,1,1,1,1,1,0],
+  [0,8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0],
+  [0,1,1,1,8,1,0,1,1,1,1,1,0,1,0,0,0,0,1,0],
+  [0,1,3,0,0,1,0,1,3,0,0,0,0,1,1,1,1,3,1,0],
+  [0,1,1,1,0,1,0,1,1,1,1,1,1,1,0,3,1,1,1,0],
   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
 ];
-//  0 = floor; 1 = wall; 3= treasure: 4 = guard; 8= window; 9= endpoint;
+//  0 = floor; 1 = wall; 3= treasure: 4,5,6,7 = guard; 8= window; 9= endpoint;
 $(() => {
 
   let playerLocation = {};
@@ -36,6 +26,8 @@ $(() => {
   const $playScreen = $('.playScreen');
   const $endGameScreen = $('.endGameScreen');
   const $highScoreScreen = $('.highScoreScreen');
+  const $map= $('#map');
+
   // Const for score elements
   const $livesScore = $('#livesScore');
   const $treasure = $('#treasureScore');
@@ -53,9 +45,9 @@ $(() => {
   $endGameScreen.hide();
   $highScoreScreen.hide();
 
-  $treasure.text(treasureCounter);
-  $livesScore.text(lifecounter);
-  $turnsScore.text(turnCounter);
+  $treasure.text('Score:' + treasureCounter);
+  $livesScore.text('Lives:' + lifecounter);
+  $turnsScore.text('Turn:' + turnCounter);
   $endScore.text(endScoreCounter);
 
   function drawMap(){
@@ -86,7 +78,7 @@ $(() => {
 
   function updateTurnCounter() {
     turnCounter++;
-    $turnsScore.text(turnCounter);
+    $turnsScore.text('Turn:' + turnCounter);
   }
 
   function movePlayer(){
@@ -151,7 +143,7 @@ $(() => {
           gameGrid[playerLocation.x][playerLocation.y+1] === 3){
             playerLocation.y += 1;
             moveDirection();
-            if (gameGrid[playerLocation.x][playerLocation.y+1] === 3){
+            if (gameGrid[playerLocation.x][playerLocation.y] === 3){
               collectTreasure();
             }
           } else if (gameGrid[playerLocation.x][playerLocation.y+1] === 8){
@@ -178,7 +170,7 @@ $(() => {
   }
 
   function spawnPlayer() {
-    playerLocation = {x: 0, y: 0};
+    playerLocation = {x: 1, y: 1};
     $(`div[data-x='${playerLocation.x}'][data-y='${playerLocation.y}']`).removeClass('floor treasure').addClass('playerCharacter');
   }
   function deSpawnPlayer() {
@@ -188,16 +180,16 @@ $(() => {
   function collectTreasure() {
     treasureCounter += 100;
     console.log(treasureCounter);
-    $treasure.text(treasureCounter);
+    $treasure.text('Score:' + treasureCounter);
     gameGrid[playerLocation.x][playerLocation.y] = 0;
   }
 
   function checkForPlayer() {
     if (guardLocation.x === playerLocation.x && guardLocation.y === playerLocation.y) {
       lifecounter--;
-      $livesScore.text(lifecounter);
+      $livesScore.text('Lives:' + lifecounter);
       treasureCounter -= 50;
-      $treasure.text(treasureCounter);
+      $treasure.text('Score:' + treasureCounter);
       deSpawnPlayer();
       spawnPlayer();
     }
@@ -245,6 +237,7 @@ $(() => {
   function endGame() {
     $playScreen.hide();
     $endGameScreen.show();
+    $map.empty();
     endScoreCounter = (treasureCounter * lifecounter) - (turnCounter * 5);
     $endScore.text(endScoreCounter);
     $('input:submit').on('click', function (){
@@ -256,6 +249,19 @@ $(() => {
     $restart.on('click', () => {
       location.reload();
     });
+  }
+
+  function nameHighScore(){
+    for (let l=0; l< Object.keys(localStorage).length; l++){
+      console.log(l);
+      const $name = $('<p />');
+      $name.text(Object.keys(localStorage)[l]);
+      $name.appendTo('.leftHandHighScoreTable');
+      const $score = $('<p />');
+      $score.text(Object.values(localStorage)[l]);
+      $score.appendTo('.rightHandHighScoreTable');
+
+    }
   }
 
   function setup(){
@@ -273,6 +279,7 @@ $(() => {
   $highScoreButton.on('click', ()=> {
     $introScreen.hide();
     $highScoreScreen.show();
+    nameHighScore();
   });
 
   $returnButton.on('click', ()=>{
@@ -282,6 +289,7 @@ $(() => {
 
   $clearHighScore.on('click', ()=> {
     localStorage.clear();
+    location.reload();
   });
 
 });

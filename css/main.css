@@ -1,6 +1,10 @@
 *{
   box-sizing: border-box;
+  font-family: 'Press Start 2P', cursive;
+  background-color: #372344;
+  color: white;
 }
+
 #map div{
   width: 32px;
   height: 32px;
@@ -8,7 +12,7 @@
 }
 #map{
   width: 640px;
-  height: 640px;
+  height: 320px;
   background-color: #421C52;
 }
 #map div.floor{
@@ -38,4 +42,51 @@
 }
 #map div.exit{
   background-color: rgba(0,0,0,0.3);
+}
+.introScreen{
+  display: flex;
+  justify-content: center;
+}
+.introLeft{
+  width: 400px;
+}
+.introRight{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+
+button{
+  font-size: 20px;
+  padding: 10px 30px;
+}
+
+button:hover{
+  color: #421C52;
+  background-color: white;
+}
+
+.highScoreScreen{
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  width: 640px;
+  margin: auto;
+}
+.leftHandHighScoreTable, .rightHandHighScoreTable{
+  width: 320px;
+  height: 400px;
+}
+
+.playScreen{
+  width: 640px;
+  display: flex;
+  flex-wrap: wrap;
+  margin: auto;
+}
+.playScreen #treasureScore, .playScreen #livesScore, .playScreen #turnsScore{
+  width: 213px;
+  height: 50px;
+  line-height: 50px;
+  text-align: center;
 }
