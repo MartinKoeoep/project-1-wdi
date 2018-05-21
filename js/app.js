@@ -258,51 +258,6 @@ $(() => {
 
   }
 
-  //
-  // function moveGuard(guardLocation){
-  //   var guardCoordinates = guardLocation;
-  //   checkForPlayer(guardCoordinates);
-  //   guardDirection = Math.floor(Math.random() * 4);
-  //   switch (guardDirection) {
-  //     case 0:
-  //       if (gameGrid[guardLocation.x-1][guardLocation.y] === 0){
-  //         $(`div[data-x='${guardLocation.x}'][data-y='${guardLocation.y}']`).removeClass('guard').addClass('floor');
-  //         guardLocation.x -= 1;
-  //         moveDirectionGuard(guardCoordinates);
-  //       } else {
-  //         console.log('Cannot move up - Guard');
-  //       }
-  //       break;
-  //     case 1:
-  //       if (gameGrid[guardLocation.x+1][guardLocation.y] === 0){
-  //         $(`div[data-x='${guardLocation.x}'][data-y='${guardLocation.y}']`).removeClass('guard').addClass('floor');
-  //         guardLocation.x += 1;
-  //         moveDirectionGuard(guardCoordinates);
-  //       } else {
-  //         console.log('Cannot move down - Guard');
-  //       }
-  //       break;
-  //     case 2:
-  //       if (gameGrid[guardLocation.x][guardLocation.y-1] === 0){
-  //         $(`div[data-x='${guardLocation.x}'][data-y='${guardLocation.y}']`).removeClass('guard').addClass('floor');
-  //         guardLocation.y -= 1;
-  //         moveDirectionGuard(guardCoordinates);
-  //       } else {
-  //         console.log('Cannot move left - Guard');
-  //       }
-  //       break;
-  //     case 3:
-  //       if (gameGrid[guardLocation.x][guardLocation.y+1] === 0){
-  //         $(`div[data-x='${guardLocation.x}'][data-y='${guardLocation.y}']`).removeClass('guard').addClass('floor');
-  //         guardLocation.y += 1;
-  //         moveDirectionGuard(guardCoordinates);
-  //       } else {
-  //         console.log('Cannot move right - Guard');
-  //       }
-  //       break;
-  //   }
-  // }
-
   function endGame() {
     $playScreen.hide();
     $endGameScreen.show();
