@@ -1,10 +1,10 @@
 const gameGrid = [
   [9,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
   [0,0,1,1,1,1,8,1,1,1,1,1,1,1,1,1,1,1,1,0],
-  [0,1,1,0,1,3,0,0,1,0,0,0,0,0,8,0,0,0,1,0],
-  [0,1,3,0,1,0,0,0,1,0,0,0,0,0,1,0,0,3,8,0],
+  [0,1,1,0,1,3,0,0,1,0,0,0,0,0,8,6,0,0,1,0],
+  [0,1,3,0,1,0,0,0,1,0,0,5,0,0,1,0,0,3,8,0],
   [0,1,0,0,1,0,4,0,1,1,1,1,0,1,1,1,1,1,1,0],
-  [0,8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0],
+  [0,8,0,0,0,0,0,0,0,0,0,0,0,0,0,7,0,0,1,0],
   [0,1,1,1,8,1,0,1,1,1,1,1,0,1,0,0,0,0,1,0],
   [0,1,3,0,0,1,0,1,3,0,0,0,0,1,1,1,1,3,1,0],
   [0,1,1,1,0,1,0,1,1,1,1,1,1,1,0,3,1,1,1,0],
@@ -14,7 +14,10 @@ const gameGrid = [
 $(() => {
 
   let playerLocation = {};
-  let guardLocation = {};
+  let guard1Location = {};
+  let guard2Location = {};
+  let guard3Location = {};
+  let guard4Location = {};
   let guardDirection = 0;
   let treasureCounter = 0;
   let lifecounter = 3;
@@ -61,9 +64,21 @@ $(() => {
         } else if (cell === 3) {
           $element.addClass('treasure');
         } else if (cell === 4) {
-          $element.addClass('guard');
-          guardLocation = {x: i, y: j};
-          gameGrid[guardLocation.x][guardLocation.y] = 0;
+          $element.addClass('guard guard1');
+          guard1Location = {x: i, y: j};
+          gameGrid[guard1Location.x][guard1Location.y] = 0;
+        } else if (cell === 5) {
+          $element.addClass('guard guard2');
+          guard2Location = {x: i, y: j};
+          gameGrid[guard2Location.x][guard2Location.y] = 0;
+        } else if (cell === 6) {
+          $element.addClass('guard guard3');
+          guard3Location = {x: i, y: j};
+          gameGrid[guard3Location.x][guard3Location.y] = 0;
+        } else if (cell === 7) {
+          $element.addClass('guard guard4');
+          guard4Location = {x: i, y: j};
+          gameGrid[guard4Location.x][guard4Location.y] = 0;
         } else if (cell === 8) {
           $element.addClass('window');
         } else if (cell === 9) {
@@ -84,7 +99,10 @@ $(() => {
   function movePlayer(){
     $(document).on('keypress', function(e){
       updateTurnCounter();
-      moveGuard();
+      moveGuard(guard1Location);
+      moveGuard(guard2Location);
+      moveGuard(guard3Location);
+      moveGuard(guard4Location);
       switch(e.which){
         case 119:     // MOVE PLAYER UP
           if (gameGrid[playerLocation.x-1][playerLocation.y] === 0 ||
@@ -164,8 +182,8 @@ $(() => {
     $(`div[data-x='${playerLocation.x}'][data-y='${playerLocation.y}']`).removeClass('floor treasure').addClass('playerCharacter');
   }
 
-  function moveDirectionGuard(){
-    $('.guard').removeClass('guard').addClass('floor');
+  function moveDirectionGuard(guardLocation){
+
     $(`div[data-x='${guardLocation.x}'][data-y='${guardLocation.y}']`).removeClass('floor').addClass('guard');
   }
 
@@ -184,7 +202,7 @@ $(() => {
     gameGrid[playerLocation.x][playerLocation.y] = 0;
   }
 
-  function checkForPlayer() {
+  function checkForPlayer(guardLocation) {
     if (guardLocation.x === playerLocation.x && guardLocation.y === playerLocation.y) {
       lifecounter--;
       $livesScore.text('Lives:' + lifecounter);
@@ -195,44 +213,95 @@ $(() => {
     }
   }
 
-  function moveGuard(){
-    checkForPlayer();
+
+  function moveGuard(guardLocation){
+    var guardCoordinates = guardLocation;
+    checkForPlayer(guardCoordinates);
     guardDirection = Math.floor(Math.random() * 4);
-    switch (guardDirection) {
-      case 0:
-        if (gameGrid[guardLocation.x-1][guardLocation.y] === 0){
-          guardLocation.x -= 1;
-          moveDirectionGuard();
-        } else {
-          console.log('Cannot move up - Guard');
-        }
-        break;
-      case 1:
-        if (gameGrid[guardLocation.x+1][guardLocation.y] === 0){
-          guardLocation.x += 1;
-          moveDirectionGuard();
-        } else {
-          console.log('Cannot move down - Guard');
-        }
-        break;
-      case 2:
-        if (gameGrid[guardLocation.x][guardLocation.y-1] === 0){
-          guardLocation.y -= 1;
-          moveDirectionGuard();
-        } else {
-          console.log('Cannot move left - Guard');
-        }
-        break;
-      case 3:
-        if (gameGrid[guardLocation.x][guardLocation.y+1] === 0){
-          guardLocation.y += 1;
-          moveDirectionGuard();
-        } else {
-          console.log('Cannot move right - Guard');
-        }
-        break;
+    if (guardDirection === 0){
+      if (gameGrid[guardLocation.x-1][guardLocation.y] === 0){
+        $(`div[data-x='${guardLocation.x}'][data-y='${guardLocation.y}']`).removeClass('guard').addClass('floor');
+        guardLocation.x -= 1;
+        moveDirectionGuard(guardCoordinates);
+      } else {
+        guardDirection = 1;
+      }
     }
+    if (guardDirection === 1){
+      if (gameGrid[guardLocation.x+1][guardLocation.y] === 0){
+        $(`div[data-x='${guardLocation.x}'][data-y='${guardLocation.y}']`).removeClass('guard').addClass('floor');
+        guardLocation.x += 1;
+        moveDirectionGuard(guardCoordinates);
+      } else {
+        guardDirection = 2;
+      }
+    }
+    if (guardDirection === 2){
+      if (gameGrid[guardLocation.x][guardLocation.y-1] === 0){
+        $(`div[data-x='${guardLocation.x}'][data-y='${guardLocation.y}']`).removeClass('guard').addClass('floor');
+        guardLocation.y -= 1;
+        moveDirectionGuard(guardCoordinates);
+      } else {
+        guardDirection = 3;
+      }
+    }
+    if (guardDirection === 3){
+      if (gameGrid[guardLocation.x][guardLocation.y+1] === 0){
+        $(`div[data-x='${guardLocation.x}'][data-y='${guardLocation.y}']`).removeClass('guard').addClass('floor');
+        guardLocation.y += 1;
+        moveDirectionGuard(guardCoordinates);
+      } else {
+        guardDirection = 0;
+      }
+    }
+
+
   }
+
+  //
+  // function moveGuard(guardLocation){
+  //   var guardCoordinates = guardLocation;
+  //   checkForPlayer(guardCoordinates);
+  //   guardDirection = Math.floor(Math.random() * 4);
+  //   switch (guardDirection) {
+  //     case 0:
+  //       if (gameGrid[guardLocation.x-1][guardLocation.y] === 0){
+  //         $(`div[data-x='${guardLocation.x}'][data-y='${guardLocation.y}']`).removeClass('guard').addClass('floor');
+  //         guardLocation.x -= 1;
+  //         moveDirectionGuard(guardCoordinates);
+  //       } else {
+  //         console.log('Cannot move up - Guard');
+  //       }
+  //       break;
+  //     case 1:
+  //       if (gameGrid[guardLocation.x+1][guardLocation.y] === 0){
+  //         $(`div[data-x='${guardLocation.x}'][data-y='${guardLocation.y}']`).removeClass('guard').addClass('floor');
+  //         guardLocation.x += 1;
+  //         moveDirectionGuard(guardCoordinates);
+  //       } else {
+  //         console.log('Cannot move down - Guard');
+  //       }
+  //       break;
+  //     case 2:
+  //       if (gameGrid[guardLocation.x][guardLocation.y-1] === 0){
+  //         $(`div[data-x='${guardLocation.x}'][data-y='${guardLocation.y}']`).removeClass('guard').addClass('floor');
+  //         guardLocation.y -= 1;
+  //         moveDirectionGuard(guardCoordinates);
+  //       } else {
+  //         console.log('Cannot move left - Guard');
+  //       }
+  //       break;
+  //     case 3:
+  //       if (gameGrid[guardLocation.x][guardLocation.y+1] === 0){
+  //         $(`div[data-x='${guardLocation.x}'][data-y='${guardLocation.y}']`).removeClass('guard').addClass('floor');
+  //         guardLocation.y += 1;
+  //         moveDirectionGuard(guardCoordinates);
+  //       } else {
+  //         console.log('Cannot move right - Guard');
+  //       }
+  //       break;
+  //   }
+  // }
 
   function endGame() {
     $playScreen.hide();
