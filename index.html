@@ -30,13 +30,14 @@
     <div id="map"></div>
   </div>
   <div class="endGameScreen">
-    <h2>Congratulations, you managed to get away</h2>
-    <p>Let's see how much you managed to gather</p>
+    <h2 id='endMessage'>Congratulations, you managed to get away</h2>
+    <p id='lootMessage'>Let's see how much you managed to gather</p>
     <div id='endScore'>0</div>
-    <p>To save your score write in your name and click submit.s</p>
-    <input type="text" id="scoreSubmit">
-    <input type="submit">
-    <button id='restart'>Try Again?</button>
+    <p class='submit'>To save your score write in your name and click submit.s</p>
+    <input type="text" id="scoreSubmit" class='submit'>
+    <button id='submit' class='submit'>Submit</button>
+    <div id="submitCheck"></div>
+    <button id='continue'>Continue</button>
   </div>
   <div class="highScoreScreen">
     <div class="leftHandHighScoreTable"><h2>Name</h2></div>

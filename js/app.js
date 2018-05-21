@@ -1,14 +1,24 @@
 const gameGrid = [
-  [9,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-  [0,0,1,1,1,1,8,1,1,1,1,1,1,1,1,1,1,1,1,0],
-  [0,1,1,0,1,3,0,0,1,0,0,0,0,0,8,6,0,0,1,0],
-  [0,1,3,0,1,0,0,0,1,0,0,5,0,0,1,0,0,3,8,0],
-  [0,1,0,0,1,0,4,0,1,1,1,1,0,1,1,1,1,1,1,0],
-  [0,8,0,0,0,0,0,0,0,0,0,0,0,0,0,7,0,0,1,0],
-  [0,1,1,1,8,1,0,1,1,1,1,1,0,1,0,0,0,0,1,0],
-  [0,1,3,0,0,1,0,1,3,0,0,0,0,1,1,1,1,3,1,0],
-  [0,1,1,1,0,1,0,1,1,1,1,1,1,1,0,3,1,1,1,0],
-  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+  [1,9,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+  [1,0,0,1,1,1,0,0,0,0,0,1,1,1,8,1,1,1,0,1],
+  [1,0,1,3,3,3,1,0,0,0,0,1,0,0,0,0,3,1,0,1],
+  [1,0,1,0,0,0,1,8,1,1,1,1,0,0,0,0,3,1,0,1],
+  [1,0,0,1,1,0,1,0,0,0,0,1,1,1,0,1,1,1,0,1],
+  [1,0,0,0,1,0,1,0,4,0,0,1,0,0,0,1,0,0,0,1],
+  [1,0,0,0,1,0,0,0,0,0,0,1,0,0,3,1,0,0,0,1],
+  [1,0,0,0,1,1,1,1,0,1,1,1,0,0,0,1,0,0,0,1],
+  [1,0,0,0,0,0,0,0,0,0,0,0,0,5,0,8,0,0,0,1],
+  [1,0,0,0,6,0,3,0,0,0,0,3,0,0,0,1,0,0,0,1],
+  [1,0,0,0,1,1,1,1,1,1,0,1,1,0,1,1,0,0,0,1],
+  [1,0,0,0,1,3,0,0,1,0,0,1,0,0,0,1,0,0,0,1],
+  [1,0,0,0,1,3,0,0,0,0,0,1,0,7,0,1,1,1,0,1],
+  [1,0,0,1,1,0,0,0,1,0,0,1,0,0,0,0,0,1,0,1],
+  [1,0,1,0,0,0,1,8,1,1,1,1,8,1,1,3,0,1,0,1],
+  [1,0,1,0,0,0,1,0,0,0,0,0,0,0,1,3,0,1,0,1],
+  [1,0,0,1,1,1,0,0,0,0,0,0,0,0,1,1,1,1,0,1],
+  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
 ];
 //  0 = floor; 1 = wall; 3= treasure: 4,5,6,7 = guard; 8= window; 9= endpoint;
 $(() => {
@@ -30,6 +40,9 @@ $(() => {
   const $endGameScreen = $('.endGameScreen');
   const $highScoreScreen = $('.highScoreScreen');
   const $map= $('#map');
+  const $submitCheck = $('#submitCheck');
+  const $endMessage = $('#endMessage');
+  const $lootMessage = $('#lootMessage');
 
   // Const for score elements
   const $livesScore = $('#livesScore');
@@ -39,10 +52,12 @@ $(() => {
   const $newGameButton = $('#newGame');
   const $highScoreButton = $('#highScoreTable');
   const $endScore = $('#endScore');
+  const $submit = $('#submit');
   const $scoreSubmit = $('#scoreSubmit');
-  const $restart = $('#restart');
+  const $continue = $('#continue');
   const $returnButton = $('#returnToMainMenu');
   const $clearHighScore = $('#clearHighScore');
+  const $submitElements = $('.submit');
 
   $playScreen.hide();
   $endGameScreen.hide();
@@ -64,19 +79,19 @@ $(() => {
         } else if (cell === 3) {
           $element.addClass('treasure');
         } else if (cell === 4) {
-          $element.addClass('guard guard1');
+          $element.addClass('guard');
           guard1Location = {x: i, y: j};
           gameGrid[guard1Location.x][guard1Location.y] = 0;
         } else if (cell === 5) {
-          $element.addClass('guard guard2');
+          $element.addClass('guard');
           guard2Location = {x: i, y: j};
           gameGrid[guard2Location.x][guard2Location.y] = 0;
         } else if (cell === 6) {
-          $element.addClass('guard guard3');
+          $element.addClass('guard');
           guard3Location = {x: i, y: j};
           gameGrid[guard3Location.x][guard3Location.y] = 0;
         } else if (cell === 7) {
-          $element.addClass('guard guard4');
+          $element.addClass('guard');
           guard4Location = {x: i, y: j};
           gameGrid[guard4Location.x][guard4Location.y] = 0;
         } else if (cell === 8) {
@@ -91,10 +106,12 @@ $(() => {
     });
   }
 
+
   function updateTurnCounter() {
     turnCounter++;
     $turnsScore.text('Turn:' + turnCounter);
   }
+
 
   function movePlayer(){
     $(document).on('keypress', function(e){
@@ -177,23 +194,24 @@ $(() => {
     });
   }
 
+
   function moveDirection(){
     $('.playerCharacter').removeClass('playerCharacter').addClass('floor');
     $(`div[data-x='${playerLocation.x}'][data-y='${playerLocation.y}']`).removeClass('floor treasure').addClass('playerCharacter');
   }
 
-  function moveDirectionGuard(guardLocation){
-
-    $(`div[data-x='${guardLocation.x}'][data-y='${guardLocation.y}']`).removeClass('floor').addClass('guard');
-  }
 
   function spawnPlayer() {
-    playerLocation = {x: 1, y: 1};
+    playerLocation = {x: 2, y: 2};
     $(`div[data-x='${playerLocation.x}'][data-y='${playerLocation.y}']`).removeClass('floor treasure').addClass('playerCharacter');
   }
+
+
   function deSpawnPlayer() {
     $('.playerCharacter').removeClass('playerCharacter').addClass('floor');
+    if (lifecounter === 0) endGame(lifecounter);
   }
+
 
   function collectTreasure() {
     treasureCounter += 100;
@@ -202,12 +220,14 @@ $(() => {
     gameGrid[playerLocation.x][playerLocation.y] = 0;
   }
 
+
   function checkForPlayer(guardLocation) {
     if (guardLocation.x === playerLocation.x && guardLocation.y === playerLocation.y) {
       lifecounter--;
       $livesScore.text('Lives:' + lifecounter);
       treasureCounter -= 50;
       $treasure.text('Score:' + treasureCounter);
+      if (lifecounter === 0) endGame(lifecounter);
       deSpawnPlayer();
       spawnPlayer();
     }
@@ -222,7 +242,7 @@ $(() => {
       if (gameGrid[guardLocation.x-1][guardLocation.y] === 0){
         $(`div[data-x='${guardLocation.x}'][data-y='${guardLocation.y}']`).removeClass('guard').addClass('floor');
         guardLocation.x -= 1;
-        moveDirectionGuard(guardCoordinates);
+        $(`div[data-x='${guardLocation.x}'][data-y='${guardLocation.y}']`).removeClass('floor').addClass('guard');
       } else {
         guardDirection = 1;
       }
@@ -231,7 +251,7 @@ $(() => {
       if (gameGrid[guardLocation.x+1][guardLocation.y] === 0){
         $(`div[data-x='${guardLocation.x}'][data-y='${guardLocation.y}']`).removeClass('guard').addClass('floor');
         guardLocation.x += 1;
-        moveDirectionGuard(guardCoordinates);
+        $(`div[data-x='${guardLocation.x}'][data-y='${guardLocation.y}']`).removeClass('floor').addClass('guard');
       } else {
         guardDirection = 2;
       }
@@ -240,7 +260,7 @@ $(() => {
       if (gameGrid[guardLocation.x][guardLocation.y-1] === 0){
         $(`div[data-x='${guardLocation.x}'][data-y='${guardLocation.y}']`).removeClass('guard').addClass('floor');
         guardLocation.y -= 1;
-        moveDirectionGuard(guardCoordinates);
+        $(`div[data-x='${guardLocation.x}'][data-y='${guardLocation.y}']`).removeClass('floor').addClass('guard');
       } else {
         guardDirection = 3;
       }
@@ -249,35 +269,42 @@ $(() => {
       if (gameGrid[guardLocation.x][guardLocation.y+1] === 0){
         $(`div[data-x='${guardLocation.x}'][data-y='${guardLocation.y}']`).removeClass('guard').addClass('floor');
         guardLocation.y += 1;
-        moveDirectionGuard(guardCoordinates);
-      } else {
-        guardDirection = 0;
+        $(`div[data-x='${guardLocation.x}'][data-y='${guardLocation.y}']`).removeClass('floor').addClass('guard');
       }
     }
-
-
   }
 
-  function endGame() {
-    $playScreen.hide();
-    $endGameScreen.show();
-    $map.empty();
-    endScoreCounter = (treasureCounter * lifecounter) - (turnCounter * 5);
-    $endScore.text(endScoreCounter);
-    $('input:submit').on('click', function (){
-      console.log($scoreSubmit.val());
-      var playerName = $scoreSubmit.val();
-      localStorage.setItem(`${playerName}`, `${endScoreCounter.toString()}`);
-      console.log(Object.keys(localStorage));
-    });
-    $restart.on('click', () => {
-      location.reload();
-    });
+
+  function endGame(check) {
+    if (check === 0) {
+      $submitElements.hide();
+      $endMessage.text('You were thrown into jail');
+      $lootMessage.text('You were caught too many times and now you\'ve nothing to sell');
+      $endScore.hide();
+    } else {
+      $playScreen.hide();
+      $endGameScreen.show();
+      $map.empty();
+      console.log(treasureCounter, 'treasure');
+      console.log(lifecounter, 'life');
+      console.log(turnCounter, 'turns');
+      endScoreCounter = (treasureCounter * lifecounter) - (turnCounter * 2.5);
+      console.log(endScoreCounter);
+      if (endScoreCounter < 0) endScoreCounter = 0;
+      $endScore.text(endScoreCounter);
+      $submit.on('click', function (){
+        var playerName = $scoreSubmit.val();
+        localStorage.setItem(`${playerName}`, `${endScoreCounter}`);
+        $submitCheck.text('Score submitted!');
+      });
+      $continue.on('click', () => {
+        location.reload();
+      });
+    }
   }
 
   function nameHighScore(){
     for (let l=0; l< Object.keys(localStorage).length; l++){
-      console.log(l);
       const $name = $('<p />');
       $name.text(Object.keys(localStorage)[l]);
       $name.appendTo('.leftHandHighScoreTable');
