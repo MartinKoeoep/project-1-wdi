@@ -1,14 +1,24 @@
 const gameGrid = [
-  [0,0,0,0,0,0,0,0,0,0],
-  [3,1,1,0,1,1,8,1,1,0],
-  [0,1,1,0,1,3,0,0,1,0],
-  [0,1,3,0,1,0,0,0,1,0],
-  [0,1,0,0,1,0,4,0,1,0],
-  [0,8,0,0,0,0,0,0,1,0],
-  [0,1,1,1,8,1,0,1,1,0],
-  [0,1,3,0,0,1,0,1,0,0],
-  [0,1,1,1,0,1,0,1,0,0],
-  [0,0,0,0,0,0,0,0,0,9]
+  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+  [3,1,1,0,1,1,8,1,1,0,0,0,0,0,0,0,0,0,0,0],
+  [0,1,1,0,1,3,0,0,1,0,0,0,0,0,0,0,0,0,0,0],
+  [0,1,3,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0],
+  [0,1,0,0,1,0,4,0,1,0,0,0,0,0,0,0,0,0,0,0],
+  [0,8,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0],
+  [0,1,1,1,8,1,0,1,1,0,0,0,0,0,0,0,0,0,0,0],
+  [0,1,3,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0],
+  [0,1,1,1,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0],
+  [0,0,0,0,0,0,0,0,0,9,0,0,0,0,0,0,0,0,0,0],
+  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+  [3,1,1,0,1,1,8,1,1,0,0,0,0,0,0,0,0,0,0,0],
+  [0,1,1,0,1,3,0,0,1,0,0,0,0,0,0,0,0,0,0,0],
+  [0,1,3,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0],
+  [0,1,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0],
+  [0,8,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0],
+  [0,1,1,1,8,1,0,1,1,0,0,0,0,0,0,0,0,0,0,0],
+  [0,1,3,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0],
+  [0,1,1,1,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0],
+  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
 ];
 //  0 = floor; 1 = wall; 3= treasure: 4 = guard; 8= window; 9= endpoint;
 $(() => {
@@ -21,18 +31,28 @@ $(() => {
   let turnCounter = 0;
   let endScoreCounter = 0;
 
+  // Const for different screen elements
   const $introScreen = $('.introScreen');
   const $playScreen = $('.playScreen');
   const $endGameScreen = $('.endGameScreen');
+  const $highScoreScreen = $('.highScoreScreen');
+  // Const for score elements
   const $livesScore = $('#livesScore');
   const $treasure = $('#treasureScore');
   const $turnsScore = $('#turnsScore');
-  const $newGame = $('#newGame');
+  // Const for buttons
+  const $newGameButton = $('#newGame');
+  const $highScoreButton = $('#highScoreTable');
   const $endScore = $('#endScore');
+  const $scoreSubmit = $('#scoreSubmit');
   const $restart = $('#restart');
+  const $returnButton = $('#returnToMainMenu');
+  const $clearHighScore = $('#clearHighScore');
 
   $playScreen.hide();
   $endGameScreen.hide();
+  $highScoreScreen.hide();
+
   $treasure.text(treasureCounter);
   $livesScore.text(lifecounter);
   $turnsScore.text(turnCounter);
@@ -226,8 +246,13 @@ $(() => {
     $playScreen.hide();
     $endGameScreen.show();
     endScoreCounter = (treasureCounter * lifecounter) - (turnCounter * 5);
-    console.log(endScoreCounter);
     $endScore.text(endScoreCounter);
+    $('input:submit').on('click', function (){
+      console.log($scoreSubmit.val());
+      var playerName = $scoreSubmit.val();
+      localStorage.setItem(`${playerName}`, `${endScoreCounter.toString()}`);
+      console.log(Object.keys(localStorage));
+    });
     $restart.on('click', () => {
       location.reload();
     });
@@ -239,11 +264,24 @@ $(() => {
     movePlayer();
   }
 
-  $newGame.on('click', () => {
+  $newGameButton.on('click', () => {
     $introScreen.hide();
     $playScreen.show();
     setup();
   });
 
+  $highScoreButton.on('click', ()=> {
+    $introScreen.hide();
+    $highScoreScreen.show();
+  });
+
+  $returnButton.on('click', ()=>{
+    $introScreen.show();
+    $highScoreScreen.hide();
+  });
+
+  $clearHighScore.on('click', ()=> {
+    localStorage.clear();
+  });
 
 });
