@@ -13,32 +13,49 @@
 #map{
   width: 640px;
   height: 640px;
-  background-color: #421C52;
+  background-color: #372344;
 }
 #map div.floor{
-  background-color: #421C52;
+  background-color: #372344;
 }
 #map div.wall{
-  background-color: grey;
+  background-image: url(../images/wall.png);s
+}
+#map div.torch{
+  width: 32px;
+  height: 32px;
+  margin: auto;
+  background: url(../images/torch.png) left center;
+  animation: play 1s steps(5, end) infinite;
 }
 #map div.window{
-  background-color: #8B4513;
+  background-image: url(../images/window.png);
+}
+
+#map div.window.vertical{
+  transform: rotate(90deg);
 }
 
 #map div.playerCharacter{
-  border-radius: 25px;
-  background-color: darkGreen;
-  border: 0px;
+  width: 32px;
+  height: 32px;
+  margin: auto;
+  background: url(../images/emilia.png) left center;
+  animation: play 3s steps(5, end) infinite;
 }
 #map div.guard{
-  border-radius: 25px;
-  background-color: #6f8c9f;
-  border: 0px;
+  width: 32px;
+  height: 32px;
+  margin: auto;
+  background: url(../images/guard.png) left center;
+  animation: play 4s steps(5, end) infinite;
 }
 #map div.treasure{
-  border-radius: 30px;
-  background-color: gold;
-  border: 0px;
+  width: 32px;
+  height: 32px;
+  margin: auto;
+  background: url(../images/treasure.png) left center;
+  animation: play 1s steps(5, end) infinite;
 }
 #map div.exit{
   background-color: rgba(0,0,0,0.3);
@@ -126,4 +143,9 @@ input{
 
 #restart{
   margin: 10px;
+}
+
+@keyframes play {
+  from { background-position:    0px; }
+     to { background-position: -160px; }
 }
