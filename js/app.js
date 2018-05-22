@@ -34,7 +34,7 @@ $(() => {
   let turnCounter = 0;
   let endScoreCounter = 0;
   let scoreValues = [];
-  let noDuplicateScore= [];
+  const noDuplicateScore= [];
 
   // Const for different screen elements
   const $introScreen = $('.introScreen');
@@ -276,6 +276,11 @@ $(() => {
     }
   }
 
+  function finalScoreCalculator(){
+    endScoreCounter = (treasureCounter * lifecounter) - (turnCounter * 2.5);
+    if (endScoreCounter < 0) endScoreCounter = 0;
+    $endScore.text(endScoreCounter);
+  }
 
   function endGame(check) {
     if (check === 0) {
@@ -287,20 +292,11 @@ $(() => {
       $playScreen.hide();
       $endGameScreen.show();
       $map.empty();
-      console.log(treasureCounter, 'treasure');
-      console.log(lifecounter, 'life');
-      console.log(turnCounter, 'turns');
-      endScoreCounter = (treasureCounter * lifecounter) - (turnCounter * 2.5);
-      console.log(endScoreCounter);
-      if (endScoreCounter < 0) endScoreCounter = 0;
-      $endScore.text(endScoreCounter);
+      finalScoreCalculator();
       $submit.on('click', function (){
         var playerName = $scoreSubmit.val();
         localStorage.setItem(`${playerName}`, `${endScoreCounter}`);
         $submitCheck.text('Score submitted!');
-      });
-      $continue.on('click', () => {
-        location.reload();
       });
     }
   }
@@ -331,7 +327,7 @@ $(() => {
           const $score = $('<p />');
           $score.text(noDuplicateScore[m]);
           $score.appendTo('.rightHandHighScoreTable');
-          if (m === 10) break;
+          if (m === 9) break;
         }
       }
     }
@@ -342,6 +338,8 @@ $(() => {
     spawnPlayer();
     movePlayer();
   }
+
+  // BUTTONS IN THE DOCUMENT
 
   $newGameButton.on('click', () => {
     $introScreen.hide();
@@ -364,4 +362,7 @@ $(() => {
     location.reload();
   });
 
+  $continue.on('click', () => {
+    location.reload();
+  });
 });
