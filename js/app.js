@@ -277,7 +277,7 @@ $(() => {
   }
 
   function finalScoreCalculator(){
-    endScoreCounter = (treasureCounter * lifecounter) - (turnCounter * 2.5);
+    endScoreCounter = Math.round((treasureCounter * lifecounter) - (turnCounter * 2.5));
     if (endScoreCounter < 0) endScoreCounter = 0;
     $endScore.text(endScoreCounter);
   }
