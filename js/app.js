@@ -33,6 +33,8 @@ $(() => {
   let lifecounter = 3;
   let turnCounter = 0;
   let endScoreCounter = 0;
+  let scoreValues = [];
+  let noDuplicateScore= [];
 
   // Const for different screen elements
   const $introScreen = $('.introScreen');
@@ -303,15 +305,35 @@ $(() => {
     }
   }
 
-  function nameHighScore(){
-    for (let l=0; l< Object.keys(localStorage).length; l++){
-      const $name = $('<p />');
-      $name.text(Object.keys(localStorage)[l]);
-      $name.appendTo('.leftHandHighScoreTable');
-      const $score = $('<p />');
-      $score.text(Object.values(localStorage)[l]);
-      $score.appendTo('.rightHandHighScoreTable');
+  function highScoreSorter(scoreValues){
+    scoreValues.sort(function (a, b){
+      return b - a;
+    });
+    return scoreValues;
+  }
 
+  function duplicateCheck (scoreValues){
+    $.each(scoreValues, function(i, el){
+      if($.inArray(el, noDuplicateScore) === -1) noDuplicateScore.push(el);
+    });
+  }
+
+  function nameHighScore(){
+    scoreValues = Object.values(localStorage);
+    highScoreSorter(scoreValues);
+    duplicateCheck(scoreValues);
+    for (let m=0; m< noDuplicateScore.length; m++){
+      for(var key in localStorage){
+        if(localStorage[key] === noDuplicateScore[m]) {
+          const $name = $('<p />');
+          $name.text(key);
+          $name.appendTo('.leftHandHighScoreTable');
+          const $score = $('<p />');
+          $score.text(noDuplicateScore[m]);
+          $score.appendTo('.rightHandHighScoreTable');
+          if (m === 10) break;
+        }
+      }
     }
   }
 
@@ -334,8 +356,7 @@ $(() => {
   });
 
   $returnButton.on('click', ()=>{
-    $introScreen.show();
-    $highScoreScreen.hide();
+    location.reload();
   });
 
   $clearHighScore.on('click', ()=> {
