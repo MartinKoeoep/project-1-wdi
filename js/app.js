@@ -116,6 +116,7 @@ $(() => {
           }
         } else if (cell === 9) {
           $element.addClass('exit');
+          $element.text('EX\nIT');
         }
         $element.attr('data-x', i);
         $element.attr('data-y', j);
@@ -206,6 +207,11 @@ $(() => {
       endGame();
     }
   }
+
+  function moveDirection(){
+    $('.playerCharacter').removeClass('playerCharacter').addClass('floor');
+    $(`div[data-x='${playerLocation.x}'][data-y='${playerLocation.y}']`).removeClass('floor treasure').addClass('playerCharacter');
+  }
   // *************************************************************************
   // *************************************************************************
 
@@ -240,12 +246,6 @@ $(() => {
     moveGuard(guard4Location);
   }
 
-  function moveDirection(){
-    $('.playerCharacter').removeClass('playerCharacter').addClass('floor');
-    $(`div[data-x='${playerLocation.x}'][data-y='${playerLocation.y}']`).removeClass('floor treasure').addClass('playerCharacter');
-  }
-
-
   function spawnPlayer() {
     playerLocation = {x: 2, y: 2};
     $(`div[data-x='${playerLocation.x}'][data-y='${playerLocation.y}']`).removeClass('floor treasure').addClass('playerCharacter');
@@ -254,7 +254,7 @@ $(() => {
 
   function deSpawnPlayer() {
     $('.playerCharacter').removeClass('playerCharacter').addClass('floor');
-    if (lifecounter === 0) endGame(lifecounter);
+    if (lifecounter < 1) endGame(lifecounter);
   }
 
 
@@ -274,7 +274,10 @@ $(() => {
       $livesScore.text('Lives:' + lifecounter);
       treasureCounter -= 50;
       $treasure.text('Score:' + treasureCounter);
-      if (lifecounter === 0) endGame(lifecounter);
+      if (lifecounter < 1) {
+        console.log('should end game');
+        endGame(lifecounter);
+      }
       deSpawnPlayer();
       spawnPlayer();
     }
@@ -290,6 +293,7 @@ $(() => {
         $(`div[data-x='${guardLocation.x}'][data-y='${guardLocation.y}']`).removeClass('guard').addClass('floor');
         guardLocation.x -= 1;
         $(`div[data-x='${guardLocation.x}'][data-y='${guardLocation.y}']`).removeClass('floor').addClass('guard');
+        checkForPlayer(guardCoordinates);
       } else {
         guardDirection = 1;
       }
@@ -299,6 +303,7 @@ $(() => {
         $(`div[data-x='${guardLocation.x}'][data-y='${guardLocation.y}']`).removeClass('guard').addClass('floor');
         guardLocation.x += 1;
         $(`div[data-x='${guardLocation.x}'][data-y='${guardLocation.y}']`).removeClass('floor').addClass('guard');
+        checkForPlayer(guardCoordinates);
       } else {
         guardDirection = 2;
       }
@@ -308,6 +313,7 @@ $(() => {
         $(`div[data-x='${guardLocation.x}'][data-y='${guardLocation.y}']`).removeClass('guard').addClass('floor');
         guardLocation.y -= 1;
         $(`div[data-x='${guardLocation.x}'][data-y='${guardLocation.y}']`).removeClass('floor').addClass('guard');
+        checkForPlayer(guardCoordinates);
       } else {
         guardDirection = 3;
       }
@@ -317,9 +323,15 @@ $(() => {
         $(`div[data-x='${guardLocation.x}'][data-y='${guardLocation.y}']`).removeClass('guard').addClass('floor');
         guardLocation.y += 1;
         $(`div[data-x='${guardLocation.x}'][data-y='${guardLocation.y}']`).removeClass('floor').addClass('guard');
+        checkForPlayer(guardCoordinates);
       }
     }
   }
+
+
+  // **********************************
+  // Functions dealing with final score and ending the GAME
+  // **********************************
 
   function finalScoreCalculator(){
     endScoreCounter = Math.round((treasureCounter * lifecounter) - (turnCounter * 2.5));
@@ -327,13 +339,17 @@ $(() => {
     $endScore.text(endScoreCounter);
   }
 
-  function endGame(check) {
+  function endGame(lifecheck) {
     $('.playerCharacter').removeClass('exit').addClass('floor');
-    if (check === 0) {
+    if (lifecheck < 1) {
+      $playScreen.hide();
+      $endGameScreen.show();
+      $continue.show();
       $submitElements.hide();
       $endMessage.text('You were thrown into jail');
       $lootMessage.text('You were caught too many times and now you\'ve nothing to sell');
       $endScore.hide();
+
     } else {
       $playScreen.hide();
       $endGameScreen.show();
@@ -349,7 +365,9 @@ $(() => {
       });
     }
   }
-
+  // **********************************
+  // Functions dealing with High Score
+  // **********************************
   function highScoreSorter(scoreValues){
     scoreValues.sort(function (a, b){
       return b - a;
@@ -381,7 +399,9 @@ $(() => {
       }
     }
   }
-
+  //*****************
+  // AUDIO FUNCTIONS
+  //*****************
   function playAudio(source){
     // uses the id of the button clicked to define the source of the audio file
     audio.src = `./audio/${source}`;
@@ -393,18 +413,20 @@ $(() => {
     mainTitle.loop = true;
     mainTitle.play();
   }
+
   function playHighScoreEasterEgg(){
     mainTitle.pause();
     var random = Math.random();
     console.log(random);
-    if (random > 0.8){
+    if (random > 0.5){
       audio.src = './audio/high_score.wav';
       audio.volume = 0.3;
       audio.play();
     }
 
   }
-
+  //*****************
+  //SETUP
   function setup(){
     drawMap();
     spawnPlayer();
@@ -446,6 +468,7 @@ $(() => {
     location.reload();
   });
 
+  // MUTE BUTTONS
   $titleTheme.on('click', () => {
     onOff = !onOff;
     if (onOff){

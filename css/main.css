@@ -142,6 +142,7 @@ button:hover, #submitButton:hover{
   display: flex;
   justify-content: space-around;
   flex-wrap: wrap;
+  margin-top: 10px;
   width: 640px;
   height: 150px;
 }
@@ -197,7 +198,7 @@ input{
      to { background-position: -160px; }
 }
 
-@media only screen and (max-width: 650px) {
+@media only screen and (max-width: 769px) {
   .playScreen #mobileButtons{
     visibility: visible;
   }
