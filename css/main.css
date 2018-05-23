@@ -125,11 +125,41 @@ button:hover, #submitButton:hover{
   margin: auto;
 }
 .playScreen #treasureScore, .playScreen #livesScore, .playScreen #turnsScore{
-  width: 213px;
+  width: 185px;
   height: 50px;
   line-height: 50px;
   text-align: center;
 }
+
+.playscreen #mute{
+  width: 40px;
+  height: 40px;
+  font-size: 30px;
+}
+
+.playScreen #mobileButtons{
+  visibility: hidden;
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  width: 640px;
+  height: 150px;
+}
+
+.mobileButtons{
+  width: 150px;
+  height: 150px;
+  background-color: grey;
+  border-style: ridge;
+  border-color: grey;
+  border-width: 7px;
+  font-size: 16px;
+}
+
+.mobileButtons:hover{
+  background-color: darkGrey;
+}
+
 .endGameScreen{
   width: 640px;
   display: flex;
@@ -165,4 +195,10 @@ input{
 @keyframes play {
   from { background-position:    0px; }
      to { background-position: -160px; }
+}
+
+@media only screen and (max-width: 650px) {
+  .playScreen #mobileButtons{
+    visibility: visible;
+  }
 }

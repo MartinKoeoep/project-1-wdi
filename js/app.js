@@ -35,6 +35,7 @@ $(() => {
   let endScoreCounter = 0;
   let scoreValues = [];
   const noDuplicateScore= [];
+  let onOff = false;
 
   // Const for different screen elements
   const $introScreen = $('.introScreen');
@@ -46,12 +47,13 @@ $(() => {
   const $endMessage = $('#endMessage');
   const $lootMessage = $('#lootMessage');
   const $titleTheme = $('#title_theme');
-
+  const $mute = $('#mute');
 
   // Const for score elements
   const $livesScore = $('#livesScore');
   const $treasure = $('#treasureScore');
   const $turnsScore = $('#turnsScore');
+
   // Const for buttons
   const $newGameButton = $('#newGame');
   const $highScoreButton = $('#highScoreTable');
@@ -62,11 +64,17 @@ $(() => {
   const $returnButton = $('#returnToMainMenu');
   const $clearHighScore = $('#clearHighScore');
   const $submitElements = $('.submit');
+  const $mobileUp = $('#mobileUp');
+  const $mobileDown = $('#mobileDown');
+  const $mobileLeft = $('#mobileLeft');
+  const $mobileRight = $('#mobileRight');
 
+  // hide screens player shouldn't see at start
   $playScreen.hide();
   $endGameScreen.hide();
   $highScoreScreen.hide();
 
+  // Take over the various counters in preparation for the game
   $treasure.text('Score:' + treasureCounter);
   $livesScore.text('Lives:' + lifecounter);
   $turnsScore.text('Turn:' + turnCounter);
@@ -123,87 +131,114 @@ $(() => {
   }
 
 
-  function movePlayer(){
+  // *************************************************************************
+  // MOVING PLAYER CHARACTER AROUND
+  // *************************************************************************
+
+  function movePlayerUp() {
+    if (gameGrid[playerLocation.x-1][playerLocation.y] === 0 ||
+    gameGrid[playerLocation.x-1][playerLocation.y] === 3){
+      playerLocation.x -= 1;
+      moveDirection();
+      if (gameGrid[playerLocation.x][playerLocation.y] === 3){
+        collectTreasure();
+      }
+    } else if (gameGrid[playerLocation.x-1][playerLocation.y] === 8){
+      playerLocation.x -= 2;
+      moveDirection();
+    } else if (gameGrid[playerLocation.x-1][playerLocation.y] === 9){
+      playerLocation.x -= 1;
+      moveDirection();
+      endGame();
+    }
+  }
+
+  function movePlayerLeft() {
+    if (gameGrid[playerLocation.x][playerLocation.y-1] === 0 ||
+    gameGrid[playerLocation.x][playerLocation.y-1] === 3){
+      playerLocation.y -= 1;
+      moveDirection();
+      if (gameGrid[playerLocation.x][playerLocation.y] === 3){
+        collectTreasure();
+      }
+    } else if (gameGrid[playerLocation.x][playerLocation.y-1] === 8){
+      playerLocation.y -= 2;
+      moveDirection();
+    } else if (gameGrid[playerLocation.x][playerLocation.y-1] === 9){
+      playerLocation.y -= 1;
+      moveDirection();
+      endGame();
+    }
+  }
+
+  function movePlayerDown() {
+    if (gameGrid[playerLocation.x+1][playerLocation.y] === 0 ||
+    gameGrid[playerLocation.x+1][playerLocation.y] === 3){
+      playerLocation.x += 1;
+      moveDirection();
+      if (gameGrid[playerLocation.x][playerLocation.y] === 3){
+        collectTreasure();
+      }
+    } else if (gameGrid[playerLocation.x+1][playerLocation.y] === 8){
+      playerLocation.x += 2;
+      moveDirection();
+    } else if (gameGrid[playerLocation.x+1][playerLocation.y] === 9){
+      playerLocation.x += 1;
+      moveDirection();
+      endGame();
+    }
+  }
+
+  function movePlayerRight() {
+    if (gameGrid[playerLocation.x][playerLocation.y+1] === 0 ||
+    gameGrid[playerLocation.x][playerLocation.y+1] === 3){
+      playerLocation.y += 1;
+      moveDirection();
+      if (gameGrid[playerLocation.x][playerLocation.y] === 3){
+        collectTreasure();
+      }
+    } else if (gameGrid[playerLocation.x][playerLocation.y+1] === 8){
+      playerLocation.y += 2;
+      moveDirection();
+    } else if (gameGrid[playerLocation.x][playerLocation.y+1] === 9){
+      playerLocation.y += 1;
+      moveDirection();
+      endGame();
+    }
+  }
+  // *************************************************************************
+  // *************************************************************************
+
+  function moveCharacters(){
     $(document).on('keypress', function(e){
-      updateTurnCounter();
-      moveGuard(guard1Location);
-      moveGuard(guard2Location);
-      moveGuard(guard3Location);
-      moveGuard(guard4Location);
       switch(e.which){
         case 119:     // MOVE PLAYER UP
-          if (gameGrid[playerLocation.x-1][playerLocation.y] === 0 ||
-          gameGrid[playerLocation.x-1][playerLocation.y] === 3){
-            playerLocation.x -= 1;
-            moveDirection();
-            if (gameGrid[playerLocation.x][playerLocation.y] === 3){
-              collectTreasure();
-            }
-          } else if (gameGrid[playerLocation.x-1][playerLocation.y] === 8){
-            playerLocation.x -= 2;
-            moveDirection();
-          } else if (gameGrid[playerLocation.x-1][playerLocation.y] === 9){
-            playerLocation.x -= 1;
-            moveDirection();
-            endGame();
-          }
+          movePlayerUp();
+          turnUpdater();
           break;
         case 97:     // MOVE PLAYER LEFT
-          if (gameGrid[playerLocation.x][playerLocation.y-1] === 0 ||
-          gameGrid[playerLocation.x][playerLocation.y-1] === 3){
-            playerLocation.y -= 1;
-            moveDirection();
-            if (gameGrid[playerLocation.x][playerLocation.y] === 3){
-              collectTreasure();
-            }
-          } else if (gameGrid[playerLocation.x][playerLocation.y-1] === 8){
-            playerLocation.y -= 2;
-            moveDirection();
-          } else if (gameGrid[playerLocation.x][playerLocation.y-1] === 9){
-            playerLocation.y -= 1;
-            moveDirection();
-            endGame();
-          }
+          movePlayerLeft();
+          turnUpdater();
           break;
         case 115:     // MOVE PLAYER DOWN
-          if (gameGrid[playerLocation.x+1][playerLocation.y] === 0 ||
-          gameGrid[playerLocation.x+1][playerLocation.y] === 3){
-            playerLocation.x += 1;
-            moveDirection();
-            if (gameGrid[playerLocation.x][playerLocation.y] === 3){
-              collectTreasure();
-            }
-          } else if (gameGrid[playerLocation.x+1][playerLocation.y] === 8){
-            playerLocation.x += 2;
-            moveDirection();
-          } else if (gameGrid[playerLocation.x+1][playerLocation.y] === 9){
-            playerLocation.x += 1;
-            moveDirection();
-            console.log('error');
-            endGame();
-          }
+          movePlayerDown();
+          turnUpdater();
           break;
         case 100:     // MOVE PLAYER RIGHT
-          if (gameGrid[playerLocation.x][playerLocation.y+1] === 0 ||
-          gameGrid[playerLocation.x][playerLocation.y+1] === 3){
-            playerLocation.y += 1;
-            moveDirection();
-            if (gameGrid[playerLocation.x][playerLocation.y] === 3){
-              collectTreasure();
-            }
-          } else if (gameGrid[playerLocation.x][playerLocation.y+1] === 8){
-            playerLocation.y += 2;
-            moveDirection();
-          } else if (gameGrid[playerLocation.x][playerLocation.y+1] === 9){
-            playerLocation.y += 1;
-            moveDirection();
-            endGame();
-          }
+          movePlayerRight();
+          turnUpdater();
           break;
       }
     });
   }
 
+  function turnUpdater() {
+    updateTurnCounter();
+    moveGuard(guard1Location);
+    moveGuard(guard2Location);
+    moveGuard(guard3Location);
+    moveGuard(guard4Location);
+  }
 
   function moveDirection(){
     $('.playerCharacter').removeClass('playerCharacter').addClass('floor');
@@ -302,10 +337,12 @@ $(() => {
     } else {
       $playScreen.hide();
       $endGameScreen.show();
+      $continue.hide();
       $map.empty();
       finalScoreCalculator();
       $submit.on('click', function (){
         playAudio('select_button.wav');
+        $continue.show();
         var playerName = $scoreSubmit.val();
         localStorage.setItem(`•  ${playerName}`, `${endScoreCounter}`);
         $submitCheck.text('Score submitted!');
@@ -371,7 +408,7 @@ $(() => {
   function setup(){
     drawMap();
     spawnPlayer();
-    movePlayer();
+    moveCharacters();
   }
 
 
@@ -410,6 +447,40 @@ $(() => {
   });
 
   $titleTheme.on('click', () => {
-    playTitleSong('title_theme.mp3');
+    onOff = !onOff;
+    if (onOff){
+      playTitleSong('title_theme.mp3');
+    } else {
+      mainTitle.pause();
+    }
   });
+
+  $mute.on('click', () => {
+    onOff = !onOff;
+    if (onOff){
+      playTitleSong('intro.mp3');
+    } else {
+      mainTitle.pause();
+    }
+  });
+
+  // Mobile Movement keypress
+  $mobileUp.on('click', () => {
+    movePlayerUp();
+    turnUpdater();
+  })
+  $mobileDown.on('click', () => {
+    movePlayerDown();
+    turnUpdater();
+  })
+  $mobileLeft.on('click', () => {
+    movePlayerLeft();
+    turnUpdater();
+  })
+  $mobileRight.on('click', () => {
+    movePlayerRight();
+    turnUpdater();
+  })
+
+
 });
