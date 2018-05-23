@@ -359,13 +359,8 @@ $(() => {
         playAudio('select_button.wav');
         $continue.show();
         var playerName = $scoreSubmit.val();
-        if (playerName) {
-          localStorage.setItem(`•  ${playerName}`, `${endScoreCounter}`);
-          $submitCheck.text('Score submitted!');
-        } else {
-          localStorage.setItem('•  NoName', `${endScoreCounter}`);
-          $submitCheck.text('Score submitted!');
-        }
+        localStorage.setItem(`•  ${playerName}`, `${endScoreCounter}`);
+        $submitCheck.text('Score submitted!');
       });
     }
   }
@@ -398,8 +393,8 @@ $(() => {
           const $score = $('<p />');
           $score.text(noDuplicateScore[m]);
           $score.appendTo('.rightHandHighScoreTable');
+          if (m === 9) break;
         }
-        if (m > 8) break;
       }
     }
   }
@@ -495,19 +490,19 @@ $(() => {
   $mobileUp.on('click', () => {
     movePlayerUp();
     turnUpdater();
-  });
+  })
   $mobileDown.on('click', () => {
     movePlayerDown();
     turnUpdater();
-  });
+  })
   $mobileLeft.on('click', () => {
     movePlayerLeft();
     turnUpdater();
-  });
+  })
   $mobileRight.on('click', () => {
     movePlayerRight();
     turnUpdater();
-  });
+  })
 
 
 });
