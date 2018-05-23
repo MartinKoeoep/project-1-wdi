@@ -287,6 +287,7 @@ $(() => {
     var guardCoordinates = guardLocation;
     checkForPlayer(guardCoordinates);
     guardDirection = Math.floor(Math.random() * 4);
+    // Guard moves UP
     if (guardDirection === 0){
       if (gameGrid[guardLocation.x-1][guardLocation.y] === 0){
         $(`div[data-x='${guardLocation.x}'][data-y='${guardLocation.y}']`).removeClass('guard').addClass('floor');
@@ -297,6 +298,7 @@ $(() => {
         guardDirection = 1;
       }
     }
+    // Guard moves DOWN
     if (guardDirection === 1){
       if (gameGrid[guardLocation.x+1][guardLocation.y] === 0){
         $(`div[data-x='${guardLocation.x}'][data-y='${guardLocation.y}']`).removeClass('guard').addClass('floor');
@@ -305,8 +307,9 @@ $(() => {
         checkForPlayer(guardCoordinates);
       } else {
         guardDirection = 2;
-      }
+      } 
     }
+    // Guard moves LEFT
     if (guardDirection === 2){
       if (gameGrid[guardLocation.x][guardLocation.y-1] === 0){
         $(`div[data-x='${guardLocation.x}'][data-y='${guardLocation.y}']`).removeClass('guard').addClass('floor');
@@ -317,6 +320,7 @@ $(() => {
         guardDirection = 3;
       }
     }
+    // Guard moves RIGHT
     if (guardDirection === 3){
       if (gameGrid[guardLocation.x][guardLocation.y+1] === 0){
         $(`div[data-x='${guardLocation.x}'][data-y='${guardLocation.y}']`).removeClass('guard').addClass('floor');
@@ -369,9 +373,11 @@ $(() => {
       });
     }
   }
+
   // **********************************
   // Functions dealing with High Score
   // **********************************
+
   function highScoreSorter(scoreValues){
     scoreValues.sort(function (a, b){
       return b - a;
@@ -403,14 +409,17 @@ $(() => {
       }
     }
   }
+
   //*****************
   // AUDIO FUNCTIONS
   //*****************
+
   function playAudio(source){
     // uses the id of the button clicked to define the source of the audio file
     audio.src = `./audio/${source}`;
     audio.play();
   }
+
   function playTitleSong(source){
     // uses the id of the button clicked to define the source of the audio file
     mainTitle.src = `./audio/${source}`;
