@@ -45,6 +45,8 @@ $(() => {
   const $submitCheck = $('#submitCheck');
   const $endMessage = $('#endMessage');
   const $lootMessage = $('#lootMessage');
+  const $titleTheme = $('#title_theme');
+
 
   // Const for score elements
   const $livesScore = $('#livesScore');
@@ -222,6 +224,7 @@ $(() => {
 
 
   function collectTreasure() {
+    playAudio('loot.wav');
     treasureCounter += 100;
     console.log(treasureCounter);
     $treasure.text('Score:' + treasureCounter);
@@ -231,6 +234,7 @@ $(() => {
 
   function checkForPlayer(guardLocation) {
     if (guardLocation.x === playerLocation.x && guardLocation.y === playerLocation.y) {
+      playAudio('captured.mp3');
       lifecounter--;
       $livesScore.text('Lives:' + lifecounter);
       treasureCounter -= 50;
@@ -301,8 +305,9 @@ $(() => {
       $map.empty();
       finalScoreCalculator();
       $submit.on('click', function (){
+        playAudio('select_button.wav');
         var playerName = $scoreSubmit.val();
-        localStorage.setItem(`${playerName}`, `${endScoreCounter}`);
+        localStorage.setItem(`•  ${playerName}`, `${endScoreCounter}`);
         $submitCheck.text('Score submitted!');
       });
     }
@@ -340,36 +345,71 @@ $(() => {
     }
   }
 
+  function playAudio(source){
+    // uses the id of the button clicked to define the source of the audio file
+    audio.src = `./audio/${source}`;
+    audio.play();
+  }
+  function playTitleSong(source){
+    // uses the id of the button clicked to define the source of the audio file
+    mainTitle.src = `./audio/${source}`;
+    mainTitle.loop = true;
+    mainTitle.play();
+  }
+  function playHighScoreEasterEgg(){
+    mainTitle.pause();
+    var random = Math.random();
+    console.log(random);
+    if (random > 0.8){
+      audio.src = './audio/high_score.wav';
+      audio.volume = 0.3;
+      audio.play();
+    }
+
+  }
+
   function setup(){
     drawMap();
     spawnPlayer();
     movePlayer();
   }
 
+
   // BUTTONS IN THE DOCUMENT
 
   $newGameButton.on('click', () => {
+    playAudio('select_button.wav');
+    playTitleSong('intro.mp3');
     $introScreen.hide();
     $playScreen.show();
     setup();
   });
 
   $highScoreButton.on('click', ()=> {
+    playAudio('select_button.wav');
+    playHighScoreEasterEgg();
     $introScreen.hide();
     $highScoreScreen.show();
     nameHighScore();
   });
 
   $returnButton.on('click', ()=>{
+    playAudio('select_button.wav');
     location.reload();
   });
 
   $clearHighScore.on('click', ()=> {
+    playAudio('select_button.wav');
     localStorage.clear();
     location.reload();
   });
 
   $continue.on('click', () => {
+    playAudio('select_button.wav');
     location.reload();
+  });
+
+  $titleTheme.on('click', () => {
+    playTitleSong('title_theme.mp3');
   });
 });

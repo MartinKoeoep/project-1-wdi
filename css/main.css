@@ -61,8 +61,10 @@
   background-color: rgba(0,0,0,0.3);
 }
 .introScreen{
+  width: 640px;
   display: flex;
   justify-content: center;
+  margin: auto;
 }
 .introLeft{
   width: 400px;
@@ -72,6 +74,21 @@
   flex-direction: column;
   justify-content: space-evenly;
 }
+
+.introRight button{
+  width: 300px
+  height: 100px;
+}
+/*
+.introRight #title_theme{
+  width: 30px;
+  height: 30px;
+  font-size: 20px;
+  line-height: 20px;
+  margin: 0;
+  padding: 0;
+} */
+
 
 button{
   font-size: 20px;
