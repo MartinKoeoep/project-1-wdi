@@ -1,42 +1,6 @@
-const gameGrid = [
-  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-  [1,9,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-  [1,0,0,1,2,1,0,0,0,0,0,1,1,1,8,1,1,1,0,1],
-  [1,0,1,3,3,3,1,0,0,0,0,1,0,0,0,0,3,1,0,1],
-  [1,0,1,0,0,0,1,8,1,1,1,1,0,0,0,0,3,1,0,1],
-  [1,0,0,1,1,0,1,0,0,0,0,1,2,1,0,1,1,1,0,1],
-  [1,0,0,0,1,0,1,0,4,0,0,1,0,0,0,1,0,0,0,1],
-  [1,0,0,0,1,0,0,0,0,0,0,1,0,0,3,1,0,0,0,1],
-  [1,0,0,0,1,1,2,1,0,1,2,1,0,0,0,1,0,0,0,1],
-  [1,0,0,0,0,0,0,0,0,0,0,0,0,5,0,8,0,0,0,1],
-  [1,0,0,0,6,0,3,0,0,0,0,3,0,0,0,1,0,0,0,1],
-  [1,0,0,0,1,1,2,1,1,1,0,1,1,0,1,1,0,0,0,1],
-  [1,0,0,0,1,3,0,0,1,0,0,1,0,0,0,1,0,0,0,1],
-  [1,0,0,0,1,3,0,0,0,0,0,1,0,7,0,1,1,1,0,1],
-  [1,0,0,1,2,0,0,0,1,0,3,1,0,0,0,0,0,1,0,1],
-  [1,0,1,0,0,0,1,8,1,1,1,1,8,1,1,3,0,1,0,1],
-  [1,0,1,0,0,0,1,0,0,0,0,0,0,0,1,3,0,1,0,1],
-  [1,0,1,1,1,1,1,0,0,0,0,0,0,0,1,1,1,1,0,1],
-  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
-];
+
 //  0 = floor; 1 = wall; 3= treasure: 4,5,6,7 = guard; 8= window; 9= endpoint;
 $(() => {
-
-  let playerLocation = {};
-  let guard1Location = {};
-  let guard2Location = {};
-  let guard3Location = {};
-  let guard4Location = {};
-  let guardDirection = 0;
-  let treasureCounter = 0;
-  let lifecounter = 3;
-  let turnCounter = 0;
-  let endScoreCounter = 0;
-  let scoreValues = [];
-  const noDuplicateScore= [];
-  let onOff = false;
-
   // Const for different screen elements
   const $introScreen = $('.introScreen');
   const $playScreen = $('.playScreen');
@@ -81,45 +45,30 @@ $(() => {
   $endScore.text(endScoreCounter);
 
   function drawMap(){
-    $.each(gameGrid, (i,row) => {
+    $.each(GameConfig.grid, (i,row) => {
       $.each(row, (j,cell) => {
         const $element = $('<div />');
-        if(cell === 0){
-          $element.addClass('floor');
-        } else if (cell === 1) {
-          $element.addClass('wall');
-        } else if (cell === 2) {
-          $element.addClass('torch');
-        } else if (cell === 3) {
-          $element.addClass('treasure');
-        } else if (cell === 4) {
-          $element.addClass('guard');
-          guard1Location = {x: i, y: j};
-          gameGrid[guard1Location.x][guard1Location.y] = 0;
-        } else if (cell === 5) {
-          $element.addClass('guard');
-          guard2Location = {x: i, y: j};
-          gameGrid[guard2Location.x][guard2Location.y] = 0;
-        } else if (cell === 6) {
-          $element.addClass('guard');
-          guard3Location = {x: i, y: j};
-          gameGrid[guard3Location.x][guard3Location.y] = 0;
-        } else if (cell === 7) {
-          $element.addClass('guard');
-          guard4Location = {x: i, y: j};
-          gameGrid[guard4Location.x][guard4Location.y] = 0;
+        $element.addClass(tilesClasses[cell]);
+        if(cell >= 4 && cell < 8){
+          const location = {x: i, y: j}
+          if (cell === 4) {
+            guard1Location = location;
+          } else if (cell === 5) {
+            guard2Location = location;
+          } else if (cell === 6) {
+            guard3Location = location;
+          } else if (cell === 7) {
+            guard4Location = location;
+          }
+          GameConfig.grid[location.x][location.y] = 0;
         } else if (cell === 8) {
-          if (gameGrid[i-1][j] === 0) {
-            $element.addClass('window');
-          } else {
-            $element.addClass('window vertical');
+          if (GameConfig.grid[i-1][j] !== 0) {
+            $element.addClass('vertical');
           }
         } else if (cell === 9) {
-          $element.addClass('exit');
           $element.text('EX\nIT');
         }
-        $element.attr('data-x', i);
-        $element.attr('data-y', j);
+        $element.attr({'data-x': i, 'data-y': j, id: `cell_${i}_${j}`});
         $element.appendTo('#map');
       });
     });
@@ -135,106 +84,50 @@ $(() => {
   // *************************************************************************
   // MOVING PLAYER CHARACTER AROUND
   // *************************************************************************
-
-  function movePlayerUp() {
-    if (gameGrid[playerLocation.x-1][playerLocation.y] === 0 ||
-    gameGrid[playerLocation.x-1][playerLocation.y] === 3){
-      playerLocation.x -= 1;
-      moveDirection();
-      if (gameGrid[playerLocation.x][playerLocation.y] === 3){
-        collectTreasure();
-      }
-    } else if (gameGrid[playerLocation.x-1][playerLocation.y] === 8){
-      playerLocation.x -= 2;
-      moveDirection();
-    } else if (gameGrid[playerLocation.x-1][playerLocation.y] === 9){
-      playerLocation.x -= 1;
-      moveDirection();
-      endGame();
+  function getNewCellValue(direction, location){
+    switch (direction) {
+      case 'up':
+        return GameConfig.grid[location.x-1][location.y];
+      case 'down':
+        return GameConfig.grid[location.x+1][location.y];
+      case 'left':
+        return GameConfig.grid[location.x][location.y-1];
+      case 'right':
+        return GameConfig.grid[location.x][location.y+1];
     }
   }
 
-  function movePlayerLeft() {
-    if (gameGrid[playerLocation.x][playerLocation.y-1] === 0 ||
-    gameGrid[playerLocation.x][playerLocation.y-1] === 3){
-      playerLocation.y -= 1;
-      moveDirection();
-      if (gameGrid[playerLocation.x][playerLocation.y] === 3){
-        collectTreasure();
-      }
-    } else if (gameGrid[playerLocation.x][playerLocation.y-1] === 8){
-      playerLocation.y -= 2;
-      moveDirection();
-    } else if (gameGrid[playerLocation.x][playerLocation.y-1] === 9){
-      playerLocation.y -= 1;
-      moveDirection();
-      endGame();
-    }
-  }
 
-  function movePlayerDown() {
-    if (gameGrid[playerLocation.x+1][playerLocation.y] === 0 ||
-    gameGrid[playerLocation.x+1][playerLocation.y] === 3){
-      playerLocation.x += 1;
-      moveDirection();
-      if (gameGrid[playerLocation.x][playerLocation.y] === 3){
-        collectTreasure();
-      }
-    } else if (gameGrid[playerLocation.x+1][playerLocation.y] === 8){
-      playerLocation.x += 2;
-      moveDirection();
-    } else if (gameGrid[playerLocation.x+1][playerLocation.y] === 9){
-      playerLocation.x += 1;
-      moveDirection();
-      endGame();
-    }
-  }
 
-  function movePlayerRight() {
-    if (gameGrid[playerLocation.x][playerLocation.y+1] === 0 ||
-    gameGrid[playerLocation.x][playerLocation.y+1] === 3){
-      playerLocation.y += 1;
-      moveDirection();
-      if (gameGrid[playerLocation.x][playerLocation.y] === 3){
-        collectTreasure();
-      }
-    } else if (gameGrid[playerLocation.x][playerLocation.y+1] === 8){
-      playerLocation.y += 2;
-      moveDirection();
-    } else if (gameGrid[playerLocation.x][playerLocation.y+1] === 9){
-      playerLocation.y += 1;
-      moveDirection();
-      endGame();
+  function movePlayer(direction){
+    const newCell = getNewCellValue(direction, playerLocation);
+    const axis = (direction === 'up' || direction === 'down') ? 'x' : 'y';
+
+    if(direction === 'up' || direction === 'left'){
+      if(newCell === 8) playerLocation[axis] -=2;
+      else if([0,3,9].includes(newCell)) playerLocation[axis] -=1;
+    } else{
+      if(newCell === 8) playerLocation[axis] +=2;
+      else if([0,3,9].includes(newCell)) playerLocation[axis] +=1;
     }
+    moveDirection();
+    if(newCell === 9) endGame();
+    if (GameConfig.grid[playerLocation.x][playerLocation.y] === 3)
+      collectTreasure();
   }
 
   function moveDirection(){
     $('.playerCharacter').removeClass('playerCharacter').addClass('floor');
-    $(`div[data-x='${playerLocation.x}'][data-y='${playerLocation.y}']`).removeClass('floor treasure').addClass('playerCharacter');
+    $(`#cell_${playerLocation.x}_${playerLocation.y}`).removeClass('floor treasure').addClass('playerCharacter');
   }
   // *************************************************************************
   // *************************************************************************
 
   function moveCharacters(){
     $(document).on('keypress', function(e){
-      switch(e.which){
-        case 119:     // MOVE PLAYER UP
-          movePlayerUp();
-          turnUpdater();
-          break;
-        case 97:     // MOVE PLAYER LEFT
-          movePlayerLeft();
-          turnUpdater();
-          break;
-        case 115:     // MOVE PLAYER DOWN
-          movePlayerDown();
-          turnUpdater();
-          break;
-        case 100:     // MOVE PLAYER RIGHT
-          movePlayerRight();
-          turnUpdater();
-          break;
-      }
+      const direction = directions[e.which];
+      movePlayer(direction);
+      turnUpdater();
     });
   }
 
@@ -248,7 +141,7 @@ $(() => {
 
   function spawnPlayer() {
     playerLocation = {x: 2, y: 2};
-    $(`div[data-x='${playerLocation.x}'][data-y='${playerLocation.y}']`).removeClass('floor treasure').addClass('playerCharacter');
+    $(`#cell_${playerLocation.x}_${playerLocation.y}`).removeClass('floor treasure').addClass('playerCharacter');
   }
 
 
@@ -262,7 +155,7 @@ $(() => {
     playAudio('loot.wav');
     treasureCounter += 100;
     $treasure.text('Score:' + treasureCounter);
-    gameGrid[playerLocation.x][playerLocation.y] = 0;
+    GameConfig.grid[playerLocation.x][playerLocation.y] = 0;
   }
 
 
@@ -274,7 +167,6 @@ $(() => {
       treasureCounter -= 50;
       $treasure.text('Score:' + treasureCounter);
       if (lifecounter < 1) {
-        console.log('should end game');
         endGame(lifecounter);
       }
       deSpawnPlayer();
@@ -287,48 +179,29 @@ $(() => {
     var guardCoordinates = guardLocation;
     checkForPlayer(guardCoordinates);
     guardDirection = Math.floor(Math.random() * 4);
-    // Guard moves UP
-    if (guardDirection === 0){
-      if (gameGrid[guardLocation.x-1][guardLocation.y] === 0){
-        $(`div[data-x='${guardLocation.x}'][data-y='${guardLocation.y}']`).removeClass('guard').addClass('floor');
-        guardLocation.x -= 1;
-        $(`div[data-x='${guardLocation.x}'][data-y='${guardLocation.y}']`).removeClass('floor').addClass('guard');
-        checkForPlayer(guardCoordinates);
-      } else {
-        guardDirection = 1;
-      }
-    }
-    // Guard moves DOWN
-    if (guardDirection === 1){
-      if (gameGrid[guardLocation.x+1][guardLocation.y] === 0){
-        $(`div[data-x='${guardLocation.x}'][data-y='${guardLocation.y}']`).removeClass('guard').addClass('floor');
-        guardLocation.x += 1;
-        $(`div[data-x='${guardLocation.x}'][data-y='${guardLocation.y}']`).removeClass('floor').addClass('guard');
-        checkForPlayer(guardCoordinates);
-      } else {
-        guardDirection = 2;
-      }
-    }
-    // Guard moves LEFT
-    if (guardDirection === 2){
-      if (gameGrid[guardLocation.x][guardLocation.y-1] === 0){
-        $(`div[data-x='${guardLocation.x}'][data-y='${guardLocation.y}']`).removeClass('guard').addClass('floor');
-        guardLocation.y -= 1;
-        $(`div[data-x='${guardLocation.x}'][data-y='${guardLocation.y}']`).removeClass('floor').addClass('guard');
-        checkForPlayer(guardCoordinates);
-      } else {
-        guardDirection = 3;
-      }
-    }
+    const direction = randomDirections[guardDirection];
+    const cell = getNewCellValue(direction, guardLocation);
+    $(`div[data-x='${guardLocation.x}'][data-y='${guardLocation.y}']`).toggleClass('guard floor');
+    const axis = (direction === 'up' || direction === 'down') ? 'x' : 'y';
+
     // Guard moves RIGHT
     if (guardDirection === 3){
-      if (gameGrid[guardLocation.x][guardLocation.y+1] === 0){
-        $(`div[data-x='${guardLocation.x}'][data-y='${guardLocation.y}']`).removeClass('guard').addClass('floor');
+      if(cell === 0)
         guardLocation.y += 1;
-        $(`div[data-x='${guardLocation.x}'][data-y='${guardLocation.y}']`).removeClass('floor').addClass('guard');
-        checkForPlayer(guardCoordinates);
-      }
+      else
+        guardDirection = 0;
     }
+    if(cell !== 0 && guardDirection !== 3){
+      guardDirection++
+    } else {
+      // Guard moves UP
+      if (guardDirection === 0) guardLocation.x -= 1;
+      if (guardDirection === 1) guardLocation.x += 1;
+      if (guardDirection === 2) guardLocation.y -= 1;
+    }
+
+    checkForPlayer(guardCoordinates);
+    $(`#cell_${guardLocation.x}_${guardLocation.y}`).toggleClass('guard floor');
   }
 
 
@@ -344,17 +217,15 @@ $(() => {
 
   function endGame(lifecheck) {
     $('.playerCharacter').removeClass('exit').addClass('floor');
+    $playScreen.hide();
+    $endGameScreen.show();
     if (lifecheck < 0) {
-      $playScreen.hide();
-      $endGameScreen.show();
       $continue.show();
       $submitElements.hide();
       $endMessage.text('You were thrown into jail');
       $lootMessage.text('You were caught too many times and now you\'ve nothing to sell');
       $endScore.hide();
-
     } else {
-      $playScreen.hide();
       $endGameScreen.show();
       $continue.hide();
       $map.empty();
@@ -379,10 +250,7 @@ $(() => {
   // **********************************
 
   function highScoreSorter(scoreValues){
-    scoreValues.sort(function (a, b){
-      return b - a;
-    });
-    return scoreValues;
+    return scoreValues.sort((a, b) => b - a);
   }
 
   function duplicateCheck (scoreValues){
@@ -399,11 +267,9 @@ $(() => {
       for(var key in localStorage){
         if(localStorage[key] === noDuplicateScore[m]) {
           const $name = $('<p />');
-          $name.text(key);
-          $name.appendTo('.leftHandHighScoreTable');
+          $name.text(key).appendTo('.leftHandHighScoreTable');
           const $score = $('<p />');
-          $score.text(noDuplicateScore[m]);
-          $score.appendTo('.rightHandHighScoreTable');
+          $score.text(noDuplicateScore[m]).appendTo('.rightHandHighScoreTable');
         }
         if (m > 8) break;
       }
@@ -430,16 +296,16 @@ $(() => {
   function playHighScoreEasterEgg(){
     mainTitle.pause();
     var random = Math.random();
-    console.log(random);
-    if (random > 0.5){
-      audio.src = './audio/high_score.wav';
-      audio.volume = 0.3;
-      audio.play();
+    if (random > .5){
+      mainTitle.src = './audio/high_score.wav';
+      mainTitle.volume = .3;
+      mainTitle.play();
     }
 
   }
   //*****************
   //SETUP
+  //*****************
   function setup(){
     drawMap();
     spawnPlayer();
@@ -448,75 +314,49 @@ $(() => {
 
 
   // BUTTONS IN THE DOCUMENT
-
-  $newGameButton.on('click', () => {
-    playAudio('select_button.wav');
-    playTitleSong('intro.mp3');
+  $('#newGame, #highScoreTable').on('click', function() {
     $introScreen.hide();
-    $playScreen.fadeIn();
-    setup();
+    if($(this).attr('id') === 'newGame'){
+      playTitleSong('intro.mp3');
+      $playScreen.fadeIn();
+      setup();
+    }else{
+      playHighScoreEasterEgg();
+      $highScoreScreen.show();
+      nameHighScore();
+    }
   });
 
-  $highScoreButton.on('click', ()=> {
-    playAudio('select_button.wav');
-    playHighScoreEasterEgg();
-    $introScreen.hide();
-    $highScoreScreen.show();
-    nameHighScore();
-  });
+  $('.sound-button').on('click', ()=>{ playAudio('select_button.wav')});
 
-  $returnButton.on('click', ()=>{
-    playAudio('select_button.wav');
+  $('#continue, #returnToMainMenu, #clearHighScore').on('click', function(){
+    if ($(this).attr('id') === 'clearHighScore') localStorage.clear();
     location.reload();
   });
 
-  $clearHighScore.on('click', ()=> {
-    playAudio('select_button.wav');
-    localStorage.clear();
-    location.reload();
-  });
-
-  $continue.on('click', () => {
-    playAudio('select_button.wav');
-    location.reload();
-  });
 
   // MUTE BUTTONS
-  $titleTheme.on('click', () => {
+
+  $('#title_theme, #mute').on('click', function(){
     onOff = !onOff;
     if (onOff){
-      playTitleSong('title_theme.mp3');
+      if ($(this).attr('id') === 'title_theme')
+        playTitleSong('title_theme.mp3');
+      else
+        playTitleSong('intro.mp3');
     } else {
       mainTitle.pause();
     }
   });
 
-  $mute.on('click', () => {
-    onOff = !onOff;
-    if (onOff){
-      playTitleSong('intro.mp3');
-    } else {
-      mainTitle.pause();
-    }
-  });
 
   // Mobile Movement keypress
-  $mobileUp.on('click', () => {
-    movePlayerUp();
-    turnUpdater();
-  });
-  $mobileDown.on('click', () => {
-    movePlayerDown();
-    turnUpdater();
-  });
-  $mobileLeft.on('click', () => {
-    movePlayerLeft();
-    turnUpdater();
-  });
-  $mobileRight.on('click', () => {
-    movePlayerRight();
-    turnUpdater();
-  });
 
-
+  $('#mobileUp, #mobileDown, #mobileLeft, #mobileRight').on('click', function(){
+    if ($(this).attr('id') === 'mobileUp') movePlayer('up');
+    if ($(this).attr('id') === 'mobileDown') movePlayer('down');
+    if ($(this).attr('id') === 'mobileLeft') movePlayer('left');
+    if ($(this).attr('id') === 'mobileRight') movePlayer('right');
+    turnUpdater();
+  });
 });

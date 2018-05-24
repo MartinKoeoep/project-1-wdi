@@ -5,6 +5,7 @@
   <title>The Heist</title>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="./js/app.js" charset="utf-8"></script>
+  <script src="./js/config.js" charset="utf-8"></script>
   <link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet">
   <link rel="shortcut icon" href="./images/favicon_emilia.png">
   <link rel="stylesheet" href="./css/main.css">
@@ -20,8 +21,8 @@
       <p>Your fence is willing to buy the loot from you, but he'll pay more the quicker you are.</p>
     </div>
     <div class="introRight">
-      <button id="newGame">New Game</button>
-      <button id="highScoreTable">High Scores</button>
+      <button data-sound-file="" class='sound-button' id="newGame">New Game</button>
+      <button id="highScoreTable" class='sound-button'>High Scores</button>
       <button id="title_theme">♫</button>
     </div>
   </div>
@@ -46,13 +47,13 @@
     <input type="text" id="scoreSubmit" class='submit'>
     <button id='submit' class='submit'>Submit</button>
     <div id="submitCheck"></div>
-    <button id='continue'>Continue</button>
+    <button class='sound-button' id='continue'>Continue</button>
   </div>
   <div class="highScoreScreen">
     <div class="leftHandHighScoreTable"><h2>Name</h2></div>
     <div class="rightHandHighScoreTable"><h2>Score</h2></div>
-    <button id="returnToMainMenu">Back</button>
-    <button id="clearHighScore">Reset High Score</button>
+    <button class='sound-button' id="returnToMainMenu">Back</button>
+    <button class='sound-button' id="clearHighScore">Reset High Score</button>
   </div>
   <audio id='audio'></audio>
   <audio id='mainTitle'></audio>
