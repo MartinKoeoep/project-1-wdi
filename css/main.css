@@ -26,7 +26,7 @@
   height: 32px;
   margin: auto;
   background: url(../images/torch.png) left center;
-  animation: play 1s steps(5, end) infinite;
+  animation: flash 1s steps(5, end) infinite;
 }
 #map div.window{
   background-image: url(../images/window.png);
@@ -152,7 +152,7 @@ button:hover, #submitButton:hover{
 }
 
 .playScreen #mobileButtons{
-  visibility: hidden;
+  visibility: visible;
   display: flex;
   justify-content: space-around;
   flex-wrap: wrap;
@@ -195,12 +195,18 @@ button:hover, #submitButton:hover{
   width: 640px;
   height: 50px;
   line-height: 50px;
-
 }
+
+.warningScreen{
+  position: absolute;
+  width: 640px;
+  height: 850px;
+  background-color: rgba(255,0,0,0.3);
+}
+
 
 input{
   font-size: 20px;
-
 }
 
 #restart{
@@ -210,10 +216,4 @@ input{
 @keyframes play {
   from { background-position:    0px; }
      to { background-position: -160px; }
-}
-
-@media only screen and (max-width: 769px) {
-  .playScreen #mobileButtons{
-    visibility: visible;
-  }
 }

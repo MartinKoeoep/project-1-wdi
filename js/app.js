@@ -12,6 +12,7 @@ $(() => {
   const $lootMessage = $('#lootMessage');
   const $titleTheme = $('#title_theme');
   const $mute = $('#mute');
+  const $warningScreen = $('.warningScreen');
 
   // Const for score elements
   const $livesScore = $('#livesScore');
@@ -37,6 +38,7 @@ $(() => {
   $playScreen.hide();
   $endGameScreen.hide();
   $highScoreScreen.hide();
+  $warningScreen.hide();
 
   // Take over the various counters in preparation for the game
   $treasure.text('Score:' + treasureCounter);
@@ -162,6 +164,7 @@ $(() => {
   function checkForPlayer(guardLocation) {
     if (guardLocation.x === playerLocation.x && guardLocation.y === playerLocation.y) {
       playAudio('captured.mp3');
+      playerCaughtFlash();
       lifecounter--;
       $livesScore.text('Lives:' + lifecounter);
       treasureCounter -= 50;
@@ -174,6 +177,10 @@ $(() => {
     }
   }
 
+  function playerCaughtFlash(){
+    $warningScreen.show();
+    $warningScreen.fadeOut();
+  }
 
   function moveGuard(guardLocation){
     var guardCoordinates = guardLocation;
@@ -219,7 +226,7 @@ $(() => {
     $('.playerCharacter').removeClass('exit').addClass('floor');
     $playScreen.hide();
     $endGameScreen.show();
-    if (lifecheck < 0) {
+    if (lifecheck < 1) {
       $continue.show();
       $submitElements.hide();
       $endMessage.text('You were thrown into jail');
