@@ -307,7 +307,7 @@ $(() => {
         checkForPlayer(guardCoordinates);
       } else {
         guardDirection = 2;
-      } 
+      }
     }
     // Guard moves LEFT
     if (guardDirection === 2){
@@ -344,7 +344,7 @@ $(() => {
 
   function endGame(lifecheck) {
     $('.playerCharacter').removeClass('exit').addClass('floor');
-    if (lifecheck < 1) {
+    if (lifecheck < 0) {
       $playScreen.hide();
       $endGameScreen.show();
       $continue.show();
@@ -453,7 +453,7 @@ $(() => {
     playAudio('select_button.wav');
     playTitleSong('intro.mp3');
     $introScreen.hide();
-    $playScreen.show();
+    $playScreen.fadeIn();
     setup();
   });
 
