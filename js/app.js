@@ -35,10 +35,12 @@ $(() => {
   const $mobileRight = $('#mobileRight');
 
   // hide screens player shouldn't see at start
+  $warningScreen.hide();
   $playScreen.hide();
   $endGameScreen.hide();
   $highScoreScreen.hide();
-  $warningScreen.hide();
+
+
 
   // Take over the various counters in preparation for the game
   $treasure.text('Score:' + treasureCounter);
@@ -188,7 +190,7 @@ $(() => {
     guardDirection = Math.floor(Math.random() * 4);
     const direction = randomDirections[guardDirection];
     const cell = getNewCellValue(direction, guardLocation);
-    $(`div[data-x='${guardLocation.x}'][data-y='${guardLocation.y}']`).toggleClass('guard floor');
+    $(`div[data-x='${guardLocation.x}'][data-y='${guardLocation.y}']`).removeClass('guard').addClass('floor');
     const axis = (direction === 'up' || direction === 'down') ? 'x' : 'y';
 
     // Guard moves RIGHT
@@ -208,7 +210,7 @@ $(() => {
     }
 
     checkForPlayer(guardCoordinates);
-    $(`#cell_${guardLocation.x}_${guardLocation.y}`).toggleClass('guard floor');
+    $(`#cell_${guardLocation.x}_${guardLocation.y}`).removeClass('floor').addClass('guard');
   }
 
 
