@@ -1,5 +1,5 @@
 
-//  0 = floor; 1 = wall; 3= treasure: 4,5,6,7 = guard; 8= window; 9= endpoint;
+
 $(() => {
   // Const for different screen elements
   const $introScreen = $('.introScreen');
@@ -48,6 +48,7 @@ $(() => {
   $turnsScore.text('Turn:' + turnCounter);
   $endScore.text(endScoreCounter);
 
+  //  0 = floor; 1 = wall; 3= treasure: 4,5,6,7 = guard; 8= window; 9= endpoint;
   function drawMap(){
     $.each(GameConfig.grid, (i,row) => {
       $.each(row, (j,cell) => {

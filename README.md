@@ -1,6 +1,6 @@
 # Project-1-WDI
 
-For our first project, we were given four days to design and build an in-browser game using HTML, CSS and JavaScript (jQuery library used). The Heist was inspired by action games from the late 90s and early 00s in terms of theme of the action, but I wanted to follow the retro theme and feeling of older top-down dungeon crawling games. Following this I wanted to re-capture the sense of nostalgia from the games I played during my childhood.
+For our first project, we were given a week to design and build an in-browser game using HTML, CSS and JavaScript (jQuery library used). The Heist was inspired by action games from the late 90s and early 00s in terms of theme of the action, but I wanted to follow the retro theme and feeling of older top-down dungeon crawling games. Following this I wanted to re-capture the sense of nostalgia from the games I played during my childhood.
 
 #Game Description
 
@@ -14,6 +14,7 @@ The Game features a single level and the intention is to be played competetively
 
 <img src='./images/the_heist_example.gif'>
 
+- Player moves around controlling the character 'Emilia' using W A S D keys for 'up','left','down',right respectively.
 - Guard Movement is entirely randomised.
 - Treasures are animated with accompanying sound effect upon pick up.
 - Windows are added too give the player a quick way to bypass guards.
